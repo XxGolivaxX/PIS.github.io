@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Collares Artesanales</title>
+    <style>
+        body {
+            font-family: 'Trebuchet MS', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #8e44ad;
+            color: #fff;
+            border-bottom: 5px solid #f39c12;
+        }
+        h1 {
+            font-family: 'Lucida Handwriting', cursive;
+            font-size: 36px;
+        }
+        .catalogo {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            background-color: #ffebcd;
+        }
+        .collar {
+            background-color: #fff;
+            border: 2px solid #8e44ad;
+            border-radius: 10px;
+            margin: 15px;
+            width: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .collar img {
+            width: 100%;
+            border-bottom: 2px solid #8e44ad;
+            border-radius: 10px 10px 0 0;
+        }
+        .collar-info {
+            padding: 15px;
+            text-align: center;
+            background-color: #fff;
+        }
+        .collar-info h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #8e44ad;
+        }
+        .collar-info p {
+            margin: 0 0 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .collar-info .precio {
+            font-size: 16px;
+            color: #e67e22;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Catálogo de Collares Artesanales</h1>
+    </header>
+    <section class="catalogo">
+        <div class="collar">
+            <img src="imagenes/GG-1.jpg" alt="Collar GG-1">
+            <div class="collar-info">
+                <h3>Collar GG-1</h3>
+                <p>Descripción del collar GG-1.</p>
+                <p class="precio">$Precio</p>
+            </div>
+        </div>
+        <!-- Agrega más collares aquí -->
+        <div class="collar">
+            <img src="imagenes/GG..jpg" alt="Otro Collar">
+            <div class="collar-info">
+                <h3>Nombre del Collar</h3>
+                <p>Descripción del collar.</p>
+                <p class="precio">$Precio</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
