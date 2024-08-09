@@ -21,15 +21,16 @@
 
         .container {
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* Cambiar a columna para móviles */
             align-items: center;
             margin: 20px;
         }
 
         .collar-img {
             position: relative;
-            width: 500px; /* Tamaño ajustable de la imagen */
-            overflow: hidden; /* Para evitar que el zoom se salga del contenedor */
+            width: 100%; /* Tamaño adaptable */
+            max-width: 500px; /* Máximo tamaño en escritorio */
+            overflow: hidden;
         }
 
         .collar-img img {
@@ -38,7 +39,8 @@
         }
 
         .collar-info {
-            margin-left: 20px;
+            margin-top: 20px;
+            text-align: center;
         }
 
         .btn-regresar {
@@ -49,6 +51,17 @@
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
+        }
+
+        /* Estilos para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .collar-img {
+                max-width: 100%; /* Ocupa todo el ancho disponible */
+            }
+
+            .collar-info {
+                margin-top: 15px;
+            }
         }
     </style>
 </head>
@@ -85,6 +98,25 @@
             });
 
             zoomContainer.addEventListener('mouseleave', () => {
+                zoomImage.style.transform = 'scale(1)';
+            });
+
+            // Implementación para dispositivos táctiles (móviles)
+            zoomContainer.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                const containerRect = zoomContainer.getBoundingClientRect();
+                const x = touch.clientX - containerRect.left;
+                const y = touch.clientY - containerRect.top;
+
+                const zoomScale = 2;
+                const zoomX = x / containerRect.width * 100;
+                const zoomY = y / containerRect.height * 100;
+
+                zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                zoomImage.style.transform = `scale(${zoomScale})`;
+            });
+
+            zoomContainer.addEventListener('touchend', () => {
                 zoomImage.style.transform = 'scale(1)';
             });
         });
