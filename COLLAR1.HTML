@@ -21,21 +21,21 @@
 
         .container {
             display: flex;
-            flex-direction: column; /* Column layout for mobile */
+            flex-direction: column;
             align-items: center;
             margin: 20px;
         }
 
         .collar-img {
             position: relative;
-            width: 100%; /* Responsive width */
-            max-width: 500px; /* Max size on larger screens */
+            width: 100%;
+            max-width: 500px;
             overflow: hidden;
         }
 
         .collar-img img {
             width: 100%;
-            transition: transform 0.25s ease; /* Smooth zoom transition */
+            transition: transform 0.25s ease;
         }
 
         .collar-info {
@@ -53,10 +53,9 @@
             border-radius: 5px;
         }
 
-        /* Styles for small screens */
         @media (max-width: 768px) {
             .collar-img {
-                max-width: 100%; /* Take full width on small screens */
+                max-width: 100%;
             }
 
             .collar-info {
@@ -85,6 +84,23 @@
             const zoomImage = document.getElementById('zoom-image');
             let isTouching = false;
 
+            // Prevent scrolling when touching the image for zoom
+            zoomContainer.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isTouching = true;
+                handleTouchMove(e);
+            });
+
+            zoomContainer.addEventListener('touchmove', (e) => {
+                e.preventDefault(); // Prevent page scrolling
+                handleTouchMove(e);
+            });
+
+            zoomContainer.addEventListener('touchend', (e) => {
+                isTouching = false;
+                zoomImage.style.transform = 'scale(1)';
+            });
+
             zoomContainer.addEventListener('mousemove', (e) => {
                 if (!isTouching) {
                     const containerRect = zoomContainer.getBoundingClientRect();
@@ -101,21 +117,6 @@
             });
 
             zoomContainer.addEventListener('mouseleave', () => {
-                zoomImage.style.transform = 'scale(1)';
-            });
-
-            // For mobile touch interaction
-            zoomContainer.addEventListener('touchstart', (e) => {
-                isTouching = true;
-                handleTouchMove(e);
-            });
-
-            zoomContainer.addEventListener('touchmove', (e) => {
-                handleTouchMove(e);
-            });
-
-            zoomContainer.addEventListener('touchend', () => {
-                isTouching = false;
                 zoomImage.style.transform = 'scale(1)';
             });
 
@@ -136,4 +137,5 @@
     </script>
 </body>
 </html>
+
 
