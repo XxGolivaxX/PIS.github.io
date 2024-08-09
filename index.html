@@ -38,6 +38,7 @@
             flex-wrap: wrap;
             gap: 10px; /* Espacio entre las tarjetas */
             justify-content: center;
+            padding: 20px;
         }
         .card {
             position: relative;
@@ -76,13 +77,11 @@
             bottom: 0;
             opacity: 1;
         }
+        .card:hover,
         .card:active {
-            transform: scale(0.98);
+            transform: scale(1.05);
         }
-        .card:active::after {
-            content: "Added !";
-            height: 3.125em;
-        }
+
         .text {
             max-width: 55px;
         }
@@ -99,6 +98,8 @@
             height: 100%;
             object-fit: cover; /* Mantiene la imagen dentro del contenedor sin distorsionar */
         }
+
+        
         
     </style>
 </head>
@@ -661,5 +662,16 @@
             <!-- Agrega más tarjetas de collares aquí -->
         </section>
     </div>
+    <script>
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remover la clase 'selected' de cualquier otra tarjeta seleccionada
+                document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+                
+                // Agregar la clase 'selected' a la tarjeta seleccionada
+                this.classList.add('selected');
+            });
+        });
+    </script>
 </body>
 </html>
