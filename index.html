@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arati</title>
+    <style>
+        body {
+    margin: 0;
+    padding: 0;
+    /*background: url(/IMAGENES/image.png) no-repeat center top;*/
+    background-size: cover;
+    background: rgba(226, 177, 69, 0.719);
+    height: 100vh;
+    font-family: "Poppins", sans-serif;
+}
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #8e44ad;
+            color: #fff;
+            border-bottom: 5px solid #f39c12;
+        }
+        h1 {
+            font-family: 'Lucida Handwriting', cursive;
+            font-size: 36px;
+            margin: 0;
+        }
+        /*.container {
+            display: flex;
+            justify-content: top;
+            align-items: center;
+            min-height: 100vh;
+            padding: -100px;
+        }*/
+        .catalogo {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Espacio entre las tarjetas */
+            justify-content: center;
+        }
+        .card {
+            position: relative;
+            width: 11.875em;
+            height: 16.5em;
+            box-shadow: 0px 1px 13px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 120ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            padding: 0.5em;
+            padding-bottom: 3.4em;
+            margin: 10px; /* Espacio alrededor de cada tarjeta */
+        }
+
+        .card .title {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.9em;
+            position: absolute;
+            left: 0.625em;
+            bottom: 1.875em;
+            font-weight: 400;
+            color: #000;
+        }
+        .card .price {
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 0.9em;
+            position: absolute;
+            left: 0.625em;
+            bottom: 0.625em;
+            color: #000;
+        }
+        .card:hover::after {
+            bottom: 0;
+            opacity: 1;
+        }
+        .card:active {
+            transform: scale(0.98);
+        }
+        .card:active::after {
+            content: "Added !";
+            height: 3.125em;
+        }
+        .text {
+            max-width: 55px;
+        }
+        .image {
+            background: rgb(241, 241, 241);
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            overflow: hidden; /* Asegura que la imagen se ajuste al contenedor */
+        }
+        .image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Mantiene la imagen dentro del contenedor sin distorsionar */
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Catalogo Arati</h1>
+    </header>
+    <div class="container">
+        <section class="catalogo">
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR1.HTML">
+                        <img src="imagenes/GG-1.jpg" alt="Collar GG-1">
+                    </a>
+                </div>
+                <span class="title">Collar GG-1</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR2.HTML">
+                        <img src="imagenes/GG-5.jpg" alt="Collar GG-5">
+                    </a>
+                </div>
+                <span class="title">Collar GG-5</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR3.HTML">
+                        <img src="imagenes/GG-6.jpg" alt="Collar GG-6">
+                    </a>
+                </div>
+                <span class="title">Pulseras GG-6</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR4.HTML">
+                        <img src="imagenes/GG-7.jpg" alt="Collar GG-7">
+                    </a>
+                </div>
+                <span class="title">Pulseras GG-7</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR5.HTML">
+                        <img src="imagenes/GG-16.jpg" alt="Collar GG-16">
+                    </a>
+                </div>
+                <span class="title">Collar GG-16</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR6.HTML">
+                        <img src="imagenes/GG-17.jpg" alt="Collar GG-17">
+                    </a>
+                </div>
+                <span class="title">Collar GG-17</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR7.HTML">
+                        <img src="imagenes/GG-47.jpg" alt="Collar GG-47">
+                    </a>
+                </div>
+                <span class="title">Collar GG-47</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR8.HTML">
+                        <img src="imagenes/GG-47-1.jpg" alt="Collar GG-47-1">
+                    </a>
+                </div>
+                <span class="title">Collar GG-47-1</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR9.HTML">
+                        <img src="imagenes/GG-47-2.jpg" alt="Collar GG-47-2">
+                    </a>
+                </div>
+                <span class="title">Collar GG-47-2</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR10.HTML">
+                        <img src="imagenes/GG-47-3.jpg" alt="Collar GG-47-3">
+                    </a>
+                </div>
+                <span class="title">Collar GG-47-3</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR11.HTML">
+                        <img src="imagenes/GG-48.jpg" alt="Collar GG-48">
+                    </a>
+                </div>
+                <span class="title">Collar GG-48</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR12.HTML">
+                        <img src="imagenes/GG-54.jpg" alt="Collar GG-54">
+                    </a>
+                </div>
+                <span class="title">Collar GG-54</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR13.HTML">
+                        <img src="imagenes/GG-61-CH.jpg" alt="Collar GG-61-CH">
+                    </a>
+                </div>
+                <span class="title">Collar GG-61-Chico</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR14.HTML">
+                        <img src="imagenes/GG-61-M.jpg" alt="Collar GG-61-M">
+                    </a>
+                </div>
+                <span class="title">Collar GG-61-Mediano</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR15.HTML">
+                        <img src="imagenes/GG-72.jpg" alt="Collar GG-72">
+                    </a>
+                </div>
+                <span class="title">Collar GG-72</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR16.HTML">
+                        <img src="imagenes/GG-86-N.jpg" alt="Collar GG-86-N">
+                    </a>
+                </div>
+                <span class="title">Collar GG-86-N</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR17.HTML">
+                        <img src="imagenes/GG-87.jpg" alt="Collar GG-87">
+                    </a>
+                </div>
+                <span class="title">Collar GG-87</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR18.HTML">
+                        <img src="imagenes/GG-88.jpg" alt="Collar GG-88">
+                    </a>
+                </div>
+                <span class="title">Pulseras GG-88</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR19.HTML">
+                        <img src="imagenes/GG-89-C.jpg" alt="Collar GG-89-C">
+                    </a>
+                </div>
+                <span class="title">Collar GG-89-C</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR20.HTML">
+                        <img src="imagenes/GG-89-L.jpg" alt="Collar GG-89-L">
+                    </a>
+                </div>
+                <span class="title">Collar GG-89-L</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR21.HTML">
+                        <img src="imagenes/GG-97.jpg" alt="Collar GG-97">
+                    </a>
+                </div>
+                <span class="title">Collar GG-97</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR22.HTML">
+                        <img src="imagenes/GG-98.jpg" alt="Collar GG-98">
+                    </a>
+                </div>
+                <span class="title">Collar GG-98</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR23.HTML">
+                        <img src="imagenes/GG-103-B.jpg" alt="Collar GG-103-B">
+                    </a>
+                </div>
+                <span class="title">Pulseras GG-103-B</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR24.HTML">
+                        <img src="imagenes/GG-103-N-ALITAS.jpg" alt="Collar GG-103-N-ALITAS">
+                    </a>
+                </div>
+                <span class="title">Collar GG-103-Alitas</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR25.HTML">
+                        <img src="imagenes/GG-103-N-CORAZONES.jpg" alt="Collar GG-103-N-CORAZONES">
+                    </a>
+                </div>
+                <span class="title">Collar GG-103-Corazones</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR26.HTML">
+                        <img src="imagenes/GG-103-N-PALOMITAS.jpg" alt="Collar GG-103-N-PALOMITAS">
+                    </a>
+                </div>
+                <span class="title">Collar GG-103-N-Palomitas</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR27.HTML">
+                        <img src="imagenes/GG-108-B.jpg" alt="Collar GG-108-B">
+                    </a>
+                </div>
+                <span class="title">Pulseras GG-108-B</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR28.HTML">
+                        <img src="imagenes/GG-108_B2.jpg" alt="Collar GG-108-B2">
+                    </a>
+                </div>
+                <span class="title">Pulseras GG-108-B</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR29.HTML">
+                        <img src="imagenes/GG-108-C.jpg" alt="Collar GG-108-C">
+                    </a>
+                </div>
+                <span class="title">Collar GG-108-C</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR30.HTML">
+                        <img src="imagenes/GG-108-CMC.jpg" alt="Collar GG-108-CMC">
+                    </a>
+                </div>
+                <span class="title">Collar GG-108-CMC</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR31.HTML">
+                        <img src="imagenes/GG-108-n.jpg" alt="Collar GG-108-n">
+                    </a>
+                </div>
+                <span class="title">Collar GG-108-N</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR32.HTML">
+                        <img src="imagenes/GG-109.jpg" alt="Collar GG-109">
+                    </a>
+                </div>
+                <span class="title">Collar GG-109</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR33.HTML">
+                        <img src="imagenes/GG-109-2.jpg" alt="Collar GG-109-2">
+                    </a>
+                </div>
+                <span class="title">Collar GG-109-2</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR34.HTML">
+                        <img src="imagenes/GG-109-3.jpg" alt="Collar GG-109-3">
+                    </a>
+                </div>
+                <span class="title">Collar GG-109-3</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR35.HTML">
+                        <img src="imagenes/GG-110-C.jpg" alt="Collar GG-109-C">
+                    </a>
+                </div>
+                <span class="title">Collar GG-109-C</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR36.HTML">
+                        <img src="imagenes/GG-110-T.jpg" alt="Collar GG-110-T">
+                    </a>
+                </div>
+                <span class="title">Collar GG-110-T</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR37.HTML">
+                        <img src="imagenes/GG-110-T-3.jpg" alt="Collar GG-110-T-3">
+                    </a>
+                </div>
+                <span class="title">Collar GG-110-T-3</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR38.HTML">
+                        <img src="imagenes/GG-111-C.jpg" alt="Collar GG-111-C">
+                    </a>
+                </div>
+                <span class="title">Collar GG-111-C</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR39.HTML">
+                        <img src="imagenes/GG-111-CMC.jpg" alt="Collar GG-111-CMC">
+                    </a>
+                </div>
+                <span class="title">Collar GG-111-CMC</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR40.HTML">
+                        <img src="imagenes/GG-115-5.jpg" alt="Collar GG-115-5">
+                    </a>
+                </div>
+                <span class="title">Collar GG-115-5</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR41.HTML">
+                        <img src="imagenes/GG-117.jpg" alt="Collar GG-117">
+                    </a>
+                </div>
+                <span class="title">Collar GG-117</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR42.HTML">
+                        <img src="imagenes/GG-118.jpg" alt="Collar GG-118">
+                    </a>
+                </div>
+                <span class="title">Collar GG-118</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR43.HTML">
+                        <img src="imagenes/GG-119.jpg" alt="Collar GG-119">
+                    </a>
+                </div>
+                <span class="title">Collar GG-119</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR44.HTML">
+                        <img src="imagenes/GG-121.jpg" alt="Collar GG-121">
+                    </a>
+                </div>
+                <span class="title">Collar GG-121</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR45.HTML">
+                        <img src="imagenes/GG-122.jpg" alt="Collar GG-122">
+                    </a>
+                </div>
+                <span class="title">Collar GG-122</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR46.HTML">
+                        <img src="imagenes/GG-124.jpg" alt="Collar GG-124">
+                    </a>
+                </div>
+                <span class="title">Collar GG-124</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR47.HTML">
+                        <img src="imagenes/GG-127.jpg" alt="Collar GG-127">
+                    </a>
+                </div>
+                <span class="title">Collar GG-127</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR48.HTML">
+                        <img src="imagenes/GG-128.jpg" alt="Collar GG-128">
+                    </a>
+                </div>
+                <span class="title">Collar GG-128</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR49.HTML">
+                        <img src="imagenes/GG-129.jpg" alt="Collar GG-129">
+                    </a>
+                </div>
+                <span class="title">Collar GG-129</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR50.HTML">
+                        <img src="imagenes/GG-130.jpg" alt="Collar GG-130">
+                    </a>
+                </div>
+                <span class="title">Collar GG-130</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR51.HTML">
+                        <img src="imagenes/GG-131.jpg" alt="Collar GG-131">
+                    </a>
+                </div>
+                <span class="title">Collar GG-131</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR52.HTML">
+                        <img src="imagenes/GG-132.jpg" alt="Collar GG-132">
+                    </a>
+                </div>
+                <span class="title">Collar GG-132</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR53.HTML">
+                        <img src="imagenes/GG-133.jpg" alt="Collar GG-133">
+                    </a>
+                </div>
+                <span class="title">Collar GG-133</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR54.HTML">
+                        <img src="imagenes/GG-133-B.jpg" alt="Collar GG-133-B">
+                    </a>
+                </div>
+                <span class="title">Pulseras GG-133-B</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR55.HTML">
+                        <img src="imagenes/GG-135.jpg" alt="Collar GG-135">
+                    </a>
+                </div>
+                <span class="title">Collar GG-135</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR56.HTML">
+                        <img src="imagenes/GG-136.jpg" alt="Collar GG-136">
+                    </a>
+                </div>
+                <span class="title">Collar GG-136</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR57.HTML">
+                        <img src="imagenes/GG-138.jpg" alt="Collar GG-138">
+                    </a>
+                </div>
+                <span class="title">Collar GG-138</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR58HTML">
+                        <img src="imagenes/GG-139.jpg" alt="Collar GG-139">
+                    </a>
+                </div>
+                <span class="title">Collar GG-139</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR59.HTML">
+                        <img src="imagenes/GG-140.jpg" alt="Collar GG-140">
+                    </a>
+                </div>
+                <span class="title">Collar GG-140</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR60.HTML">
+                        <img src="imagenes/GG-142.jpg" alt="Collar GG-142">
+                    </a>
+                </div>
+                <span class="title">Collar GG-142</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            <div class="card">
+                <div class="image">
+                    <a href="COLLAR61.HTML">
+                        <img src="imagenes/GG-143.jpg" alt="Collar GG-143">
+                    </a>
+                </div>
+                <span class="title">Collar GG-143</span>
+                <span class="price">$Descripcion</span>
+            </div>
+            
+            <!-- Agrega más tarjetas de collares aquí -->
+        </section>
+    </div>
+</body>
+</html>

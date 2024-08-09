@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collar GG-1</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #8e44ad;
+            color: #fff;
+            border-bottom: 5px solid #f39c12;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+        }
+
+        .collar-img {
+            position: relative;
+            width: 500px; /* Tamaño ajustable de la imagen */
+            overflow: hidden; /* Para evitar que el zoom se salga del contenedor */
+        }
+
+        .collar-img img {
+            width: 100%;
+            transition: transform 0.25s ease; /* Transición suave para el zoom */
+        }
+
+        .collar-info {
+            margin-left: 20px;
+        }
+
+        .btn-regresar {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #8e44ad;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Collar GG-1</h1>
+    </header>
+    <div class="container">
+        <div class="collar-img" id="zoom-container">
+            <img src="imagenes/GG-1.jpg" alt="Collar GG-1" id="zoom-image">
+        </div>
+        <div class="collar-info">
+            <h2>Collar GG-1</h2>
+            <p>Descripción detallada del collar GG-1. Aquí puedes incluir información sobre los materiales, el proceso de fabricación, y cualquier otro detalle relevante que quieras destacar.</p>
+            <a href="index.html" class="btn-regresar">Volver al Catálogo</a>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const zoomContainer = document.getElementById('zoom-container');
+            const zoomImage = document.getElementById('zoom-image');
+
+            zoomContainer.addEventListener('mousemove', (e) => {
+                const containerRect = zoomContainer.getBoundingClientRect();
+                const x = e.clientX - containerRect.left;
+                const y = e.clientY - containerRect.top;
+
+                const zoomScale = 2; // Escala del zoom
+                const zoomX = x / containerRect.width * 100;
+                const zoomY = y / containerRect.height * 100;
+
+                zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                zoomImage.style.transform = `scale(${zoomScale})`;
+            });
+
+            zoomContainer.addEventListener('mouseleave', () => {
+                zoomImage.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
