@@ -21,21 +21,21 @@
 
         .container {
             display: flex;
-            flex-direction: column; /* Cambiar a columna para móviles */
+            flex-direction: column; /* Column layout for mobile */
             align-items: center;
             margin: 20px;
         }
 
         .collar-img {
             position: relative;
-            width: 100%; /* Tamaño adaptable */
-            max-width: 500px; /* Máximo tamaño en escritorio */
+            width: 100%; /* Responsive width */
+            max-width: 500px; /* Max size on larger screens */
             overflow: hidden;
         }
 
         .collar-img img {
             width: 100%;
-            transition: transform 0.25s ease; /* Transición suave para el zoom */
+            transition: transform 0.25s ease; /* Smooth zoom transition */
         }
 
         .collar-info {
@@ -53,10 +53,10 @@
             border-radius: 5px;
         }
 
-        /* Estilos para pantallas pequeñas */
+        /* Styles for small screens */
         @media (max-width: 768px) {
             .collar-img {
-                max-width: 100%; /* Ocupa todo el ancho disponible */
+                max-width: 100%; /* Take full width on small screens */
             }
 
             .collar-info {
@@ -83,26 +83,43 @@
         document.addEventListener('DOMContentLoaded', () => {
             const zoomContainer = document.getElementById('zoom-container');
             const zoomImage = document.getElementById('zoom-image');
+            let isTouching = false;
 
             zoomContainer.addEventListener('mousemove', (e) => {
-                const containerRect = zoomContainer.getBoundingClientRect();
-                const x = e.clientX - containerRect.left;
-                const y = e.clientY - containerRect.top;
+                if (!isTouching) {
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const x = e.clientX - containerRect.left;
+                    const y = e.clientY - containerRect.top;
 
-                const zoomScale = 2; // Escala del zoom
-                const zoomX = x / containerRect.width * 100;
-                const zoomY = y / containerRect.height * 100;
+                    const zoomScale = 2;
+                    const zoomX = x / containerRect.width * 100;
+                    const zoomY = y / containerRect.height * 100;
 
-                zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                zoomImage.style.transform = `scale(${zoomScale})`;
+                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                    zoomImage.style.transform = `scale(${zoomScale})`;
+                }
             });
 
             zoomContainer.addEventListener('mouseleave', () => {
                 zoomImage.style.transform = 'scale(1)';
             });
 
-            // Implementación para dispositivos táctiles (móviles)
+            // For mobile touch interaction
+            zoomContainer.addEventListener('touchstart', (e) => {
+                isTouching = true;
+                handleTouchMove(e);
+            });
+
             zoomContainer.addEventListener('touchmove', (e) => {
+                handleTouchMove(e);
+            });
+
+            zoomContainer.addEventListener('touchend', () => {
+                isTouching = false;
+                zoomImage.style.transform = 'scale(1)';
+            });
+
+            function handleTouchMove(e) {
                 const touch = e.touches[0];
                 const containerRect = zoomContainer.getBoundingClientRect();
                 const x = touch.clientX - containerRect.left;
@@ -114,12 +131,9 @@
 
                 zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
                 zoomImage.style.transform = `scale(${zoomScale})`;
-            });
-
-            zoomContainer.addEventListener('touchend', () => {
-                zoomImage.style.transform = 'scale(1)';
-            });
+            }
         });
     </script>
 </body>
 </html>
+
