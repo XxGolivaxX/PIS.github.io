@@ -67,7 +67,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 pzoom3</h1>
+        <h1>Collar GG-1</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -82,73 +82,19 @@
         document.addEventListener('DOMContentLoaded', () => {
             const zoomContainer = document.getElementById('zoom-container');
             const zoomImage = document.getElementById('zoom-image');
-            let isZoomed = false;
-            let lastTapTime = 0;
-            let initialTouchX = 0;
-            let initialTouchY = 0;
-            let initialImageX = 0;
-            let initialImageY = 0;
-
-            // Detecta doble tap para zoom en móviles
-            zoomContainer.addEventListener('touchstart', function(e) {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTapTime;
-
-                if (tapLength < 300 && tapLength > 0) {
-                    e.preventDefault();
-                    if (!isZoomed) {
-                        const touch = e.touches[0];
-                        const rect = zoomImage.getBoundingClientRect();
-
-                        initialTouchX = touch.clientX;
-                        initialTouchY = touch.clientY;
-                        initialImageX = rect.left;
-                        initialImageY = rect.top;
-
-                        zoomImage.style.transformOrigin = 'center';
-                        zoomImage.style.transform = `scale(2) translate(0, 0)`;
-                        isZoomed = true;
-                    } else {
-                        zoomImage.style.transform = 'scale(1)';
-                        isZoomed = false;
-                    }
-                }
-
-                lastTapTime = currentTime;
-            });
-
-            // Maneja el movimiento al estar haciendo zoom en móviles
-            zoomContainer.addEventListener('touchmove', function(e) {
-                if (isZoomed) {
-                    e.preventDefault();
-                    const touch = e.touches[0];
-                    const moveX = touch.clientX - initialTouchX;
-                    const moveY = touch.clientY - initialTouchY;
-
-                    zoomImage.style.transform = `scale(2) translate(${moveX}px, ${moveY}px)`;
-                }
-            });
 
             // Maneja el zoom en escritorio con el mouse
             zoomContainer.addEventListener('mousemove', (e) => {
-                if (!isZoomed) {
-                    const containerRect = zoomContainer.getBoundingClientRect();
-                    const x = e.clientX - containerRect.left;
-                    const y = e.clientY - containerRect.top;
+                const containerRect = zoomContainer.getBoundingClientRect();
+                const x = e.clientX - containerRect.left;
+                const y = e.clientY - containerRect.top;
 
-                    const zoomX = x / containerRect.width * 100;
-                    const zoomY = y / containerRect.height * 100;
+                const zoomX = x / containerRect.width * 100;
+                const zoomY = y / containerRect.height * 100;
 
-                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(2)`;
-                }
+                zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                zoomImage.style.transform = `scale(2)`;
             });
 
-            // Restablece la imagen al estado original al salir del área de zoom en escritorio
-            zoomContainer.addEventListener('mouseleave', () => {
-                zoomImage.style.transform = 'scale(1)';
-            });
-        });
-    </script>
-</body>
-</html>
+            // Restablece la imagen al
+
