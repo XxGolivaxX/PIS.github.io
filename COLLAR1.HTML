@@ -66,13 +66,14 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1</h1>
+        <h1>Collar GG-1w</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
             <img src="imagenes/GG-1.jpg" alt="Collar GG-1" id="zoom-image">
         </div>
         <div class="collar-info">
+            <p>Descripción detallada del collar GG-1. Aquí puedes incluir información sobre los materiales, el proceso de fabricación, y cualquier otro detalle relevante que quieras destacar.</p>
             <a href="index.html" class="btn-regresar">Volver al Catálogo</a>
         </div>
     </div>
@@ -82,58 +83,92 @@
             const zoomImage = document.getElementById('zoom-image');
             let isTouching = false;
             let isZoomed = false;
+            let startX = 0;
+            let startY = 0;
+            let translateX = 0;
+            let translateY = 0;
+            const zoomScale = 3;
+            let lastTapTime = 0;
 
-            // Detectar doble tap para hacer zoom
-            zoomContainer.addEventListener('touchstart', (e) => {
-                if (isZoomed) {
-                    e.preventDefault(); // Evita el comportamiento de desplazamiento predeterminado solo cuando está haciendo zoom
-                }
-                const tapTime = new Date().getTime();
-                if (tapTime - lastTapTime < 300) {
-                    // Se detectó un doble tap
-                    toggleZoom(e);
-                }
-                lastTapTime = tapTime;
-            });
+            function resetZoom() {
+                zoomImage.style.transform = 'scale(1) translate(0, 0)';
+                translateX = 0;
+                translateY = 0;
+                isZoomed = false;
+            }
 
-            zoomContainer.addEventListener('touchmove', (e) => {
+            function handleTouchStart(e) {
+                isTouching = true;
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+            }
+
+            function handleTouchMove(e) {
                 if (isTouching && isZoomed) {
-                    e.preventDefault(); // Evita el desplazamiento de la página solo si se está haciendo zoom
-                    handleTouchMove(e);
-                }
-            });
+                    const touch = e.touches[0];
+                    translateX = touch.clientX - startX;
+                    translateY = touch.clientY - startY;
 
+                    zoomImage.style.transform = `scale(${zoomScale}) translate(${translateX}px, ${translateY}px)`;
+                }
+            }
+
+            function handleDoubleTap(e) {
+                if (!isZoomed) {
+                    isZoomed = true;
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const touch = e.touches[0];
+                    const x = touch.clientX - containerRect.left;
+                    const y = touch.clientY - containerRect.top;
+
+                    const zoomX = (x / containerRect.width) * 100;
+                    const zoomY = (y / containerRect.height) * 100;
+
+                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                    zoomImage.style.transform = `scale(${zoomScale})`;
+                } else {
+                    resetZoom();
+                }
+            }
+
+            zoomContainer.addEventListener('touchstart', handleTouchStart);
+            zoomContainer.addEventListener('touchmove', handleTouchMove);
             zoomContainer.addEventListener('touchend', () => {
                 isTouching = false;
             });
 
-            // Función para manejar el zoom
-            function toggleZoom(e) {
-                if (!isZoomed) {
-                    zoomImage.style.transform = 'scale(3)';
-                    isZoomed = true;
-                } else {
-                    zoomImage.style.transform = 'scale(1)';
-                    isZoomed = false;
+            // Double-tap detection for zoom on mobile
+            zoomContainer.addEventListener('touchend', (e) => {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTapTime;
+
+                if (tapLength < 300 && tapLength > 0) {
+                    handleDoubleTap(e);
                 }
-            }
 
-            function handleTouchMove(e) {
-                const touch = e.touches[0];
-                const containerRect = zoomContainer.getBoundingClientRect();
-                const x = touch.clientX - containerRect.left;
-                const y = touch.clientY - containerRect.top;
+                lastTapTime = currentTime;
+            });
 
-                const zoomX = x / containerRect.width * 100;
-                const zoomY = y / containerRect.height * 100;
+            // Mousemove zoom for desktop
+            zoomContainer.addEventListener('mousemove', (e) => {
+                if (!isTouching) {
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const x = e.clientX - containerRect.left;
+                    const y = e.clientY - containerRect.top;
 
-                zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                if (isZoomed) {
-                    zoomImage.style.transform = `scale(3)`;
+                    const zoomX = (x / containerRect.width) * 100;
+                    const zoomY = (y / containerRect.height) * 100;
+
+                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                    zoomImage.style.transform = `scale(${zoomScale})`;
                 }
-            }
+            });
+
+            zoomContainer.addEventListener('mouseleave', resetZoom);
         });
     </script>
 </body>
 </html>
+
 
