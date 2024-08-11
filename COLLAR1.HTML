@@ -26,7 +26,7 @@
             margin: 20px;
         }
 
-        .zoom-container {
+        .collar-img {
             position: relative;
             width: 100%;
             max-width: 350px;
@@ -34,16 +34,10 @@
             cursor: grab;
         }
 
-        .zoom-content {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .zoom-content img {
+        .collar-img img {
             width: 100%;
             transition: transform 0.25s ease;
+            cursor: pointer;
         }
 
         .collar-info {
@@ -62,7 +56,7 @@
         }
 
         @media (max-width: 768px) {
-            .zoom-container {
+            .collar-img {
                 max-width: 100%;
             }
 
@@ -74,13 +68,11 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 zoomx3</h1>
+        <h1>Collar GG-1</h1>
     </header>
     <div class="container">
-        <div class="zoom-container" id="zoom-container">
-            <div class="zoom-content" id="zoom-content">
-                <img src="imagenes/GG-1.jpg" alt="Collar GG-1" id="zoom-image">
-            </div>
+        <div class="collar-img" id="zoom-container">
+            <img src="imagenes/GG-1.jpg" alt="Collar GG-1" id="zoom-image">
         </div>
         <div class="collar-info">
             <p>Descripción detallada del collar GG-1. Aquí puedes incluir información sobre los materiales, el proceso de fabricación, y cualquier otro detalle relevante que quieras destacar.</p>
@@ -90,46 +82,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const zoomContainer = document.getElementById('zoom-container');
-            const zoomContent = document.getElementById('zoom-content');
             const zoomImage = document.getElementById('zoom-image');
             let isZoomed = false;
-            let lastTapTime = 0;
+            let isDragging = false;
+            let startX, startY;
 
-            // Maneja el zoom en dispositivos móviles
-            zoomContainer.addEventListener('touchstart', (e) => {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTapTime;
-
-                if (tapLength < 300 && tapLength > 0) {
-                    e.preventDefault(); // Evita el comportamiento predeterminado del desplazamiento
-                    if (!isZoomed) {
-                        const touch = e.touches[0];
-                        const containerRect = zoomContainer.getBoundingClientRect();
-                        const x = touch.clientX - containerRect.left;
-                        const y = touch.clientY - containerRect.top;
-
-                        const zoomX = x / containerRect.width * 100;
-                        const zoomY = y / containerRect.height * 100;
-
-                        zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                        zoomImage.style.transform = `scale(3)`; // Zoom al 300%
-                        zoomContent.style.cursor = 'grabbing'; // Cambia el cursor para indicar que está siendo movido
-                        zoomContent.style.overflow = 'auto'; // Permite el desplazamiento
-                        isZoomed = true;
-                    } else {
-                        zoomImage.style.transform = 'scale(1)';
-                        zoomContent.style.cursor = 'grab'; // Cambia el cursor de vuelta al estado original
-                        zoomContent.style.overflow = 'hidden'; // Desactiva el desplazamiento
-                        isZoomed = false;
-                    }
-                }
-
-                lastTapTime = currentTime;
-            });
-
-            // Maneja el zoom en escritorio con el mouse
-            zoomContainer.addEventListener('mousemove', (e) => {
-                if (isZoomed) {
+            // Detecta doble tap para zoom en móviles
+            zoomContainer.addEventListener('dblclick', (e) => {
+                if (!isZoomed) {
                     const containerRect = zoomContainer.getBoundingClientRect();
                     const x = e.clientX - containerRect.left;
                     const y = e.clientY - containerRect.top;
@@ -138,46 +98,84 @@
                     const zoomY = y / containerRect.height * 100;
 
                     zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(2)`; // Zoom al 200%
+                    zoomImage.style.transform = `scale(3)`; // Zoom al 300%
+                    isZoomed = true;
+                    zoomContainer.style.cursor = "grab";
+                } else {
+                    zoomImage.style.transform = 'scale(1)';
+                    isZoomed = false;
+                    zoomContainer.style.cursor = "pointer";
                 }
             });
 
-            // Restablece la imagen al estado original al salir del área de zoom en escritorio
-            zoomContainer.addEventListener('mouseleave', () => {
-                zoomImage.style.transform = 'scale(1)';
-                zoomContent.style.cursor = 'grab'; // Cambia el cursor de vuelta al estado original
-                zoomContent.style.overflow = 'hidden'; // Desactiva el desplazamiento
+            // Maneja el zoom en escritorio con el mouse
+            zoomContainer.addEventListener('mousemove', (e) => {
+                if (isZoomed && !isDragging) {
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const x = e.clientX - containerRect.left;
+                    const y = e.clientY - containerRect.top;
+
+                    const zoomX = x / containerRect.width * 100;
+                    const zoomY = y / containerRect.height * 100;
+
+                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                }
             });
 
-            // Maneja el desplazamiento de la imagen en estado de zoom
+            // Inicia el desplazamiento (pan)
             zoomContainer.addEventListener('mousedown', (e) => {
                 if (isZoomed) {
-                    const startX = e.pageX - zoomContent.offsetLeft;
-                    const startY = e.pageY - zoomContent.offsetTop;
-                    const scrollLeft = zoomContent.scrollLeft;
-                    const scrollTop = zoomContent.scrollTop;
-
-                    const onMouseMove = (e) => {
-                        zoomContent.scrollLeft = scrollLeft - (e.pageX - startX);
-                        zoomContent.scrollTop = scrollTop - (e.pageY - startY);
-                    };
-
-                    const onMouseUp = () => {
-                        document.removeEventListener('mousemove', onMouseMove);
-                        document.removeEventListener('mouseup', onMouseUp);
-                        zoomContent.style.cursor = 'grab'; // Cambia el cursor de vuelta al estado original
-                    };
-
-                    document.addEventListener('mousemove', onMouseMove);
-                    document.addEventListener('mouseup', onMouseUp);
+                    isDragging = true;
+                    startX = e.clientX - zoomImage.offsetLeft;
+                    startY = e.clientY - zoomImage.offsetTop;
+                    zoomContainer.style.cursor = "grabbing";
                 }
             });
 
-            // Previene el zoom en móviles al deslizar
-            zoomContainer.addEventListener('touchmove', (e) => {
-                if (isZoomed) {
-                    e.preventDefault(); // Evita el desplazamiento de la página
+            // Realiza el desplazamiento (pan)
+            zoomContainer.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    const moveX = e.clientX - startX;
+                    const moveY = e.clientY - startY;
+                    zoomImage.style.transform = `translate(${moveX}px, ${moveY}px) scale(3)`;
                 }
+            });
+
+            // Finaliza el desplazamiento (pan)
+            zoomContainer.addEventListener('mouseup', () => {
+                isDragging = false;
+                zoomContainer.style.cursor = "grab";
+            });
+
+            zoomContainer.addEventListener('mouseleave', () => {
+                isDragging = false;
+                zoomContainer.style.cursor = "pointer";
+            });
+
+            // Maneja el touch para dispositivos móviles
+            zoomContainer.addEventListener('touchstart', (e) => {
+                if (isZoomed) {
+                    isDragging = true;
+                    const touch = e.touches[0];
+                    startX = touch.clientX - zoomImage.offsetLeft;
+                    startY = touch.clientY - zoomImage.offsetTop;
+                    zoomContainer.style.cursor = "grabbing";
+                }
+            });
+
+            zoomContainer.addEventListener('touchmove', (e) => {
+                if (isDragging) {
+                    const touch = e.touches[0];
+                    const moveX = touch.clientX - startX;
+                    const moveY = touch.clientY - startY;
+                    zoomImage.style.transform = `translate(${moveX}px, ${moveY}px) scale(3)`;
+                }
+            });
+
+            zoomContainer.addEventListener('touchend', () => {
+                isDragging = false;
+                zoomContainer.style.cursor = "grab";
             });
         });
     </script>
