@@ -67,7 +67,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 P2</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -82,33 +82,43 @@
         document.addEventListener('DOMContentLoaded', () => {
             const zoomContainer = document.getElementById('zoom-container');
             const zoomImage = document.getElementById('zoom-image');
-            let isTouching = false;
+            let isZoomed = false;
             let startX = 0;
             let startY = 0;
             let lastX = 0;
             let lastY = 0;
-            let isZoomed = false;
             let currentX = 0;
             let currentY = 0;
-            let longPressTimeout;
 
-            // Deshabilitar el menú contextual para evitar la descarga de la imagen
-            zoomImage.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
+            // Zoom al pasar el mouse en modo escritorio
+            zoomContainer.addEventListener('mousemove', (e) => {
+                if (window.innerWidth > 768 && !isZoomed) {
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const x = e.clientX - containerRect.left;
+                    const y = e.clientY - containerRect.top;
+
+                    const zoomScale = 3; // Aumenta este valor para más zoom
+                    const zoomX = x / containerRect.width * 100;
+                    const zoomY = y / containerRect.height * 100;
+
+                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                    zoomImage.style.transform = `scale(${zoomScale})`;
+                }
             });
 
-            // Evita el zoom accidental activando el zoom solo después de 200ms de toque
-            zoomContainer.addEventListener('touchstart', (e) => {
-                longPressTimeout = setTimeout(() => {
-                    const touch = e.touches[0];
-                    startX = touch.clientX - lastX;
-                    startY = touch.clientY - lastY;
-                    isTouching = true;
+            zoomContainer.addEventListener('mouseleave', () => {
+                if (window.innerWidth > 768) {
+                    zoomImage.style.transform = 'scale(1)';
+                }
+            });
 
+            // Zoom con doble clic en dispositivos móviles
+            zoomContainer.addEventListener('dblclick', (e) => {
+                if (window.innerWidth <= 768) {
                     if (!isZoomed) {
                         const containerRect = zoomContainer.getBoundingClientRect();
-                        const x = touch.clientX - containerRect.left;
-                        const y = touch.clientY - containerRect.top;
+                        const x = e.clientX - containerRect.left;
+                        const y = e.clientY - containerRect.top;
 
                         const zoomScale = 3; // Aumenta este valor para más zoom
                         const zoomX = x / containerRect.width * 100;
@@ -116,34 +126,45 @@
 
                         zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
                         zoomImage.style.transform = `scale(${zoomScale})`;
+
                         isZoomed = true;
+                        zoomImage.style.cursor = 'move';
+                    } else {
+                        zoomImage.style.transform = 'translate(0, 0) scale(1)';
+                        isZoomed = false;
+                        lastX = 0;
+                        lastY = 0;
+                        zoomImage.style.cursor = 'grab';
                     }
-                }, 200); // Reduce el tiempo para activar el zoom
+                }
             });
 
             zoomContainer.addEventListener('touchmove', (e) => {
-                clearTimeout(longPressTimeout); // Cancela el zoom si se mueve antes de 200ms
-                if (!isTouching) return;
+                if (isZoomed && window.innerWidth <= 768) {
+                    const touch = e.touches[0];
+                    currentX = touch.clientX - startX;
+                    currentY = touch.clientY - startY;
 
-                const touch = e.touches[0];
-                currentX = touch.clientX - startX;
-                currentY = touch.clientY - startY;
+                    zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(3)`;
 
-                zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(3)`;
+                    lastX = currentX;
+                    lastY = currentY;
 
-                lastX = currentX;
-                lastY = currentY;
-
-                e.preventDefault();
+                    e.preventDefault();
+                }
             });
 
-            zoomContainer.addEventListener('touchend', () => {
-                clearTimeout(longPressTimeout);
-                isTouching = false;
-                zoomImage.style.transform = 'translate(0, 0) scale(1)';
-                lastX = 0;
-                lastY = 0;
-                isZoomed = false;
+            zoomContainer.addEventListener('touchstart', (e) => {
+                if (isZoomed && window.innerWidth <= 768) {
+                    const touch = e.touches[0];
+                    startX = touch.clientX - lastX;
+                    startY = touch.clientY - lastY;
+                }
+            });
+
+            // Prevenir el menú contextual en el caso de un toque largo
+            zoomImage.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
             });
 
             document.addEventListener('gesturestart', (e) => {
