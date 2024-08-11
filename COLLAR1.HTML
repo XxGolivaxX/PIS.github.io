@@ -31,12 +31,14 @@
             width: 100%;
             max-width: 350px;
             overflow: hidden;
+            background-color: #611b1b;
         }
 
         .collar-img img {
             width: 100%;
             transition: transform 0.25s ease;
             cursor: grab;
+            transform-origin: center center;
         }
 
         .collar-info {
@@ -67,7 +69,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 2</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -87,8 +89,6 @@
             let startY = 0;
             let lastX = 0;
             let lastY = 0;
-            let currentX = 0;
-            let currentY = 0;
 
             // Zoom al pasar el mouse en modo escritorio
             zoomContainer.addEventListener('mousemove', (e) => {
@@ -132,8 +132,6 @@
                     } else {
                         zoomImage.style.transform = 'translate(0, 0) scale(1)';
                         isZoomed = false;
-                        lastX = 0;
-                        lastY = 0;
                         zoomImage.style.cursor = 'grab';
                     }
                 }
@@ -142,14 +140,17 @@
             zoomContainer.addEventListener('touchmove', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
                     const touch = e.touches[0];
-                    currentX = touch.clientX - startX;
-                    currentY = touch.clientY - startY;
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const touchX = touch.clientX - containerRect.left;
+                    const touchY = touch.clientY - containerRect.top;
 
-                    zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(3)`;
+                    const zoomScale = 3;
+                    const imgRect = zoomImage.getBoundingClientRect();
+                    const xOffset = touchX - (imgRect.width / 2);
+                    const yOffset = touchY - (imgRect.height / 2);
 
-                    lastX = currentX;
-                    lastY = currentY;
-
+                    zoomImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(${zoomScale})`;
+                    
                     e.preventDefault();
                 }
             });
@@ -157,8 +158,8 @@
             zoomContainer.addEventListener('touchstart', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
                     const touch = e.touches[0];
-                    startX = touch.clientX - lastX;
-                    startY = touch.clientY - lastY;
+                    startX = touch.clientX;
+                    startY = touch.clientY;
                 }
             });
 
