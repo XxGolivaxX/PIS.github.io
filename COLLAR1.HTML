@@ -36,7 +36,7 @@
         .collar-img img {
             width: 100%;
             transition: transform 0.25s ease;
-            transform-origin: center center;
+            cursor: pointer;
         }
 
         .collar-info {
@@ -54,20 +54,53 @@
             border-radius: 5px;
         }
 
-        @media (max-width: 768px) {
-            .collar-img {
-                max-width: 100%;
-            }
+        /* Estilos para el contenedor de zoom */
+        .zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-            .collar-info {
-                margin-top: 15px;
-            }
+        .zoom-image {
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform 0.25s ease;
+            cursor: grab;
+        }
+
+        .zoom-image:active {
+            cursor: grabbing;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Collar GG-1</h1>
+        <h1>Collar GG-1 prueba de zoom</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -78,77 +111,63 @@
             <a href="index.html" class="btn-regresar">Volver al Catálogo</a>
         </div>
     </div>
+
+    <!-- Contenedor para la imagen en zoom -->
+    <div class="zoom-overlay" id="zoom-overlay">
+        <button class="close-btn" id="close-btn">&times;</button>
+        <img src="imagenes/GG-1.jpg" alt="Collar GG-1" id="zoomed-image" class="zoom-image">
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const zoomContainer = document.getElementById('zoom-container');
             const zoomImage = document.getElementById('zoom-image');
-            let isZoomed = false;
-            let lastTapTime = 0;
-            let startTouch = { x: 0, y: 0 };
+            const zoomOverlay = document.getElementById('zoom-overlay');
+            const zoomedImage = document.getElementById('zoomed-image');
+            const closeBtn = document.getElementById('close-btn');
 
-            zoomContainer.addEventListener('touchstart', (e) => {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTapTime;
+            let isDragging = false;
+            let startX, startY, scrollLeft, scrollTop;
 
-                if (tapLength < 300 && tapLength > 0) {
-                    e.preventDefault();
-                    if (!isZoomed) {
-                        const touch = e.touches[0];
-                        const containerRect = zoomContainer.getBoundingClientRect();
-                        const x = touch.clientX - containerRect.left;
-                        const y = touch.clientY - containerRect.top;
-
-                        const zoomX = x / containerRect.width * 100;
-                        const zoomY = y / containerRect.height * 100;
-
-                        zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                        zoomImage.style.transform = `scale(2)`;
-                        isZoomed = true;
-                    } else {
-                        zoomImage.style.transform = 'scale(1)';
-                        isZoomed = false;
-                    }
-                }
-
-                lastTapTime = currentTime;
-                if (isZoomed) {
-                    startTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-                }
+            // Abrir vista de zoom
+            zoomImage.addEventListener('click', () => {
+                zoomOverlay.style.display = 'flex';
+                zoomedImage.style.transform = 'scale(1)';
+                zoomedImage.style.transformOrigin = 'center center';
             });
 
-            zoomContainer.addEventListener('touchmove', (e) => {
-                if (isZoomed) {
-                    e.preventDefault();
-                    const touch = e.touches[0];
-                    const containerRect = zoomContainer.getBoundingClientRect();
-                    const deltaX = touch.clientX - startTouch.x;
-                    const deltaY = touch.clientY - startTouch.y;
-
-                    let transform = getComputedStyle(zoomImage).transform;
-                    const matrix = new WebKitCSSMatrix(transform);
-
-                    zoomImage.style.transform = `scale(2) translate(${matrix.m41 + deltaX}px, ${matrix.m42 + deltaY}px)`;
-
-                    startTouch = { x: touch.clientX, y: touch.clientY };
-                }
+            // Cerrar vista de zoom
+            closeBtn.addEventListener('click', () => {
+                zoomOverlay.style.display = 'none';
             });
 
-            zoomContainer.addEventListener('mousemove', (e) => {
-                if (!isZoomed) {
-                    const containerRect = zoomContainer.getBoundingClientRect();
-                    const x = e.clientX - containerRect.left;
-                    const y = e.clientY - containerRect.top;
-
-                    const zoomX = x / containerRect.width * 100;
-                    const zoomY = y / containerRect.height * 100;
-
-                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(2)`;
-                }
+            // Mover imagen con zoom
+            zoomedImage.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.pageX - zoomedImage.offsetLeft;
+                startY = e.pageY - zoomedImage.offsetTop;
+                scrollLeft = zoomedImage.scrollLeft;
+                scrollTop = zoomedImage.scrollTop;
+                zoomedImage.style.cursor = 'grabbing';
             });
 
-            zoomContainer.addEventListener('mouseleave', () => {
-                zoomImage.style.transform = 'scale(1)';
+            zoomedImage.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - zoomedImage.offsetLeft;
+                const y = e.pageY - zoomedImage.offsetTop;
+                const walkX = (x - startX) * 2; // Ajusta la velocidad de desplazamiento
+                const walkY = (y - startY) * 2;
+                zoomedImage.style.transform = `translate(${walkX}px, ${walkY}px) scale(2)`;
+            });
+
+            zoomedImage.addEventListener('mouseup', () => {
+                isDragging = false;
+                zoomedImage.style.cursor = 'grab';
+            });
+
+            zoomedImage.addEventListener('mouseleave', () => {
+                isDragging = false;
+                zoomedImage.style.cursor = 'grab';
             });
         });
     </script>
