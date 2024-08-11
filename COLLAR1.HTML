@@ -31,6 +31,7 @@
             width: 100%;
             max-width: 350px;
             overflow: hidden;
+            /* Asegúrate de que el contenedor recorte la imagen ampliada */
         }
 
         .collar-img img {
@@ -69,7 +70,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -154,7 +155,15 @@
                     const deltaY = touch.clientY - startY;
 
                     requestAnimationFrame(() => {
-                        zoomImage.style.transform = `scale(2.5) translate(${deltaX / 1.5}px, ${deltaY / 1.5}px)`; // Ajusta el divisor para controlar la velocidad de movimiento
+                        // Asegura que la imagen se mantenga dentro del contenedor
+                        const containerRect = zoomContainer.getBoundingClientRect();
+                        const imageRect = zoomImage.getBoundingClientRect();
+                        const maxX = Math.max(containerRect.width - imageRect.width / 2, 0);
+                        const maxY = Math.max(containerRect.height - imageRect.height / 2, 0);
+                        const clampedX = Math.min(Math.max(deltaX, -maxX), maxX);
+                        const clampedY = Math.min(Math.max(deltaY, -maxY), maxY);
+
+                        zoomImage.style.transform = `scale(2.5) translate(${clampedX}px, ${clampedY}px)`; // Ajusta el nivel de zoom
                     });
 
                     offsetX = deltaX;
@@ -180,4 +189,5 @@
     </script>
 </body>
 </html>
+
 
