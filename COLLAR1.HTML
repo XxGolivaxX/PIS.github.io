@@ -69,7 +69,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 3</h1>
+        <h1>Collar GG-1 PRUEBA</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -87,8 +87,8 @@
             let isZoomed = false;
             let startX = 0;
             let startY = 0;
-            let lastX = 0;
-            let lastY = 0;
+            let currentX = 0;
+            let currentY = 0;
 
             // Zoom al pasar el mouse en modo escritorio
             zoomContainer.addEventListener('mousemove', (e) => {
@@ -137,6 +137,8 @@
                 }
             });
 
+            let lastTouch = { x: 0, y: 0 };
+
             // Movimiento suave durante el zoom en dispositivos móviles
             zoomContainer.addEventListener('touchmove', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
@@ -144,27 +146,31 @@
 
                     const touch = e.touches[0];
                     const containerRect = zoomContainer.getBoundingClientRect();
-                    const imgRect = zoomImage.getBoundingClientRect();
                     const zoomScale = 3;
 
                     const touchX = touch.clientX - containerRect.left;
                     const touchY = touch.clientY - containerRect.top;
 
-                    const translateX = (touchX - (containerRect.width / 2)) * (zoomScale - 1);
-                    const translateY = (touchY - (containerRect.height / 2)) * (zoomScale - 1);
+                    const deltaX = touchX - lastTouch.x;
+                    const deltaY = touchY - lastTouch.y;
+
+                    currentX += deltaX;
+                    currentY += deltaY;
 
                     // Uso de requestAnimationFrame para suavizar el movimiento
                     requestAnimationFrame(() => {
-                        zoomImage.style.transform = `translate(-${translateX}px, -${translateY}px) scale(${zoomScale})`;
+                        zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(${zoomScale})`;
                     });
+
+                    lastTouch = { x: touchX, y: touchY };
                 }
             });
 
             zoomContainer.addEventListener('touchstart', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
                     const touch = e.touches[0];
-                    startX = touch.clientX;
-                    startY = touch.clientY;
+                    lastTouch.x = touch.clientX;
+                    lastTouch.y = touch.clientY;
                 }
             });
 
