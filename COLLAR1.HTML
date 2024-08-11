@@ -31,7 +31,7 @@
             width: 100%;
             max-width: 350px;
             overflow: hidden;
-            background-color: #611b1b;
+            background-color: #611b1b; /* Color de fondo */
         }
 
         .collar-img img {
@@ -69,7 +69,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 2</h1>
+        <h1>Collar GG-1 3</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -137,21 +137,26 @@
                 }
             });
 
+            // Movimiento suave durante el zoom en dispositivos móviles
             zoomContainer.addEventListener('touchmove', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
+                    e.preventDefault(); // Prevenir el scroll de la página
+
                     const touch = e.touches[0];
                     const containerRect = zoomContainer.getBoundingClientRect();
+                    const imgRect = zoomImage.getBoundingClientRect();
+                    const zoomScale = 3;
+
                     const touchX = touch.clientX - containerRect.left;
                     const touchY = touch.clientY - containerRect.top;
 
-                    const zoomScale = 3;
-                    const imgRect = zoomImage.getBoundingClientRect();
-                    const xOffset = touchX - (imgRect.width / 2);
-                    const yOffset = touchY - (imgRect.height / 2);
+                    const translateX = (touchX - (containerRect.width / 2)) * (zoomScale - 1);
+                    const translateY = (touchY - (containerRect.height / 2)) * (zoomScale - 1);
 
-                    zoomImage.style.transform = `translate(${xOffset}px, ${yOffset}px) scale(${zoomScale})`;
-                    
-                    e.preventDefault();
+                    // Uso de requestAnimationFrame para suavizar el movimiento
+                    requestAnimationFrame(() => {
+                        zoomImage.style.transform = `translate(-${translateX}px, -${translateY}px) scale(${zoomScale})`;
+                    });
                 }
             });
 
