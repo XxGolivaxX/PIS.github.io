@@ -31,7 +31,6 @@
             width: 100%;
             max-width: 350px;
             overflow: hidden;
-            /* Asegúrate de que el contenedor recorte la imagen ampliada */
         }
 
         .collar-img img {
@@ -70,7 +69,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 PRUEBA5</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -158,12 +157,17 @@
                         const containerRect = zoomContainer.getBoundingClientRect();
                         const imageRect = zoomImage.getBoundingClientRect();
 
-                        // Calcular límites de movimiento
-                        const maxTranslateX = Math.max(0, (imageRect.width - containerRect.width) / 2);
-                        const maxTranslateY = Math.max(0, (imageRect.height - containerRect.height) / 2);
+                        // Asegura que la imagen no se mueva más allá del contenedor
+                        const maxTranslateX = (imageRect.width - containerRect.width) / 2;
+                        const maxTranslateY = (imageRect.height - containerRect.height) / 2;
 
-                        const clampedX = Math.min(Math.max(deltaX, -maxTranslateX), maxTranslateX);
-                        const clampedY = Math.min(Math.max(deltaY, -maxTranslateY), maxTranslateY);
+                        let clampedX = deltaX;
+                        let clampedY = deltaY;
+
+                        if (deltaX < -maxTranslateX) clampedX = -maxTranslateX;
+                        if (deltaX > maxTranslateX) clampedX = maxTranslateX;
+                        if (deltaY < -maxTranslateY) clampedY = -maxTranslateY;
+                        if (deltaY > maxTranslateY) clampedY = maxTranslateY;
 
                         zoomImage.style.transform = `scale(2.5) translate(${clampedX}px, ${clampedY}px)`; // Ajusta el nivel de zoom
                     });
@@ -191,3 +195,4 @@
     </script>
 </body>
 </html>
+
