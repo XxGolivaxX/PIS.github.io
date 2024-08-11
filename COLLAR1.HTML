@@ -32,6 +32,9 @@
             max-width: 350px;
             overflow: hidden;
             background-color: #611b1b; /* Color de fondo para áreas no cubiertas */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .collar-img img {
@@ -40,6 +43,9 @@
             cursor: grab;
             touch-action: none; /* Previene el desplazamiento en dispositivos móviles */
             will-change: transform; /* Optimiza el rendimiento de transformaciones */
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .collar-info {
@@ -70,7 +76,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 godd</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -141,8 +147,10 @@
             zoomContainer.addEventListener('touchstart', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
                     const touch = e.touches[0];
-                    startX = touch.clientX - offsetX;
-                    startY = touch.clientY - offsetY;
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    offsetX = zoomImage.offsetLeft;
+                    offsetY = zoomImage.offsetTop;
                 }
             });
 
@@ -161,12 +169,8 @@
                     const maxTranslateX = (imageRect.width * zoomScale - containerRect.width) / 2;
                     const maxTranslateY = (imageRect.height * zoomScale - containerRect.height) / 2;
 
-                    let clampedX = deltaX;
-                    let clampedY = deltaY;
-
-                    // Limitar el desplazamiento para evitar el área blanca
-                    clampedX = Math.max(-maxTranslateX, Math.min(clampedX, maxTranslateX));
-                    clampedY = Math.max(-maxTranslateY, Math.min(clampedY, maxTranslateY));
+                    let clampedX = Math.min(maxTranslateX, Math.max(-maxTranslateX, offsetX + deltaX));
+                    let clampedY = Math.min(maxTranslateY, Math.max(-maxTranslateY, offsetY + deltaY));
 
                     zoomImage.style.transform = `scale(${zoomScale}) translate(${clampedX}px, ${clampedY}px)`;
                 }
