@@ -9,6 +9,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            background-color: #8e44ad; /* Color de fondo de la página para mejorar la visibilidad */
         }
 
         header {
@@ -31,15 +32,15 @@
             width: 100%;
             max-width: 350px;
             overflow: hidden;
-            background-color: #611b1b; /* Color de fondo para áreas no cubiertas */
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0; /* Asegura que no haya espacios adicionales */
         }
 
         .collar-img img {
-            width: 100%;
+            display: block; /* Elimina el espacio extra debajo de la imagen */
+            max-width: 100%; /* Asegura que la imagen no se desborde del contenedor */
+            height: auto; /* Mantiene la proporción de la imagen */
             transition: transform 0.25s ease;
             cursor: grab;
             touch-action: none; /* Previene el desplazamiento en dispositivos móviles */
@@ -74,7 +75,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 Bien?</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -192,4 +193,3 @@
     </script>
 </body>
 </html>
-
