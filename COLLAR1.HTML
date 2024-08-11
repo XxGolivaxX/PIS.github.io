@@ -66,7 +66,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PZOOM</h1>
+        <h1>Collar GG-1</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -77,83 +77,34 @@
             <a href="index.html" class="btn-regresar">Volver al Catálogo</a>
         </div>
     </div>
+    <script src="https://unpkg.com/@panzoom/panzoom@9.4.4/dist/panzoom.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const zoomContainer = document.getElementById('zoom-container');
-            const zoomImage = document.getElementById('zoom-image');
-            let isZoomed = false;
-            let lastTapTime = 0;
-            let scale = 2;
-            let startX = 0;
-            let startY = 0;
+            const panzoom = Panzoom(zoomContainer, {
+                maxScale: 5,
+                contain: 'inside',
+                startScale: 1,
+                duration: 0.3,
+                canvas: true,
+            });
 
-            // Detecta doble tap para zoom en móviles
+            // Añadir interacción con doble tap para hacer zoom en dispositivos móviles
+            zoomContainer.addEventListener('dblclick', panzoom.zoomIn);
             zoomContainer.addEventListener('touchstart', function(e) {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTapTime;
-
-                if (tapLength < 300 && tapLength > 0) {
+                if (e.touches.length === 2) {
                     e.preventDefault();
-                    if (!isZoomed) {
-                        const touch = e.touches[0];
-                        const rect = zoomImage.getBoundingClientRect();
-
-                        const offsetX = touch.clientX - rect.left;
-                        const offsetY = touch.clientY - rect.top;
-
-                        // Centra la imagen en la posición donde se hizo el doble tap
-                        startX = (offsetX / rect.width) * 100;
-                        startY = (offsetY / rect.height) * 100;
-
-                        zoomImage.style.transformOrigin = `${startX}% ${startY}%`;
-                        zoomImage.style.transform = `scale(${scale})`;
-                        isZoomed = true;
-                    } else {
-                        zoomImage.style.transform = 'scale(1)';
-                        isZoomed = false;
-                    }
-                }
-
-                lastTapTime = currentTime;
-            });
-
-            // Maneja el movimiento al estar haciendo zoom en móviles
-            zoomContainer.addEventListener('touchmove', function(e) {
-                if (isZoomed) {
-                    e.preventDefault();
-                    const touch = e.touches[0];
-                    const rect = zoomImage.getBoundingClientRect();
-
-                    const offsetX = touch.clientX - rect.left;
-                    const offsetY = touch.clientY - rect.top;
-
-                    const moveX = (offsetX - rect.width / 2) / rect.width * 100;
-                    const moveY = (offsetY - rect.height / 2) / rect.height * 100;
-
-                    zoomImage.style.transform = `scale(${scale}) translate(${moveX}%, ${moveY}%)`;
+                    panzoom.zoomIn();
                 }
             });
 
-            // Maneja el zoom en escritorio con el mouse
-            zoomContainer.addEventListener('mousemove', (e) => {
-                if (!isZoomed) {
-                    const containerRect = zoomContainer.getBoundingClientRect();
-                    const x = e.clientX - containerRect.left;
-                    const y = e.clientY - containerRect.top;
-
-                    const zoomX = x / containerRect.width * 100;
-                    const zoomY = y / containerRect.height * 100;
-
-                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(${scale})`;
+            zoomContainer.addEventListener('touchend', function(e) {
+                if (e.touches.length === 0) {
+                    panzoom.zoomOut();
                 }
-            });
-
-            // Restablece la imagen al estado original al salir del área de zoom en escritorio
-            zoomContainer.addEventListener('mouseleave', () => {
-                zoomImage.style.transform = 'scale(1)';
             });
         });
     </script>
 </body>
 </html>
+
