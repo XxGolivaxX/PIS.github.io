@@ -32,10 +32,6 @@
             max-width: 350px;
             overflow: hidden;
             background-color: #611b1b; /* Color de fondo para áreas no cubiertas */
-            /* Asegura que el contenedor no tenga espacio extra */
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .collar-img img {
@@ -74,7 +70,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 con2</h1>
+        <h1>Collar GG-1 PRUEBA</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -158,26 +154,21 @@
                     const deltaX = touch.clientX - startX;
                     const deltaY = touch.clientY - startY;
 
-                    requestAnimationFrame(() => {
-                        const containerRect = zoomContainer.getBoundingClientRect();
-                        const imageRect = zoomImage.getBoundingClientRect();
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const imageRect = zoomImage.getBoundingClientRect();
 
-                        const zoomScale = 2.5; // Ajusta este valor para controlar el nivel de zoom
-                        const maxTranslateX = (imageRect.width * zoomScale - containerRect.width) / 2;
-                        const maxTranslateY = (imageRect.height * zoomScale - containerRect.height) / 2;
+                    const zoomScale = 2.5; // Ajusta este valor para controlar el nivel de zoom
+                    const maxTranslateX = (imageRect.width * zoomScale - containerRect.width) / 2;
+                    const maxTranslateY = (imageRect.height * zoomScale - containerRect.height) / 2;
 
-                        let clampedX = deltaX;
-                        let clampedY = deltaY;
+                    let clampedX = deltaX;
+                    let clampedY = deltaY;
 
-                        // Limitar el desplazamiento para evitar el área blanca
-                        clampedX = Math.max(-maxTranslateX, Math.min(clampedX, maxTranslateX));
-                        clampedY = Math.max(-maxTranslateY, Math.min(clampedY, maxTranslateY));
+                    // Limitar el desplazamiento para evitar el área blanca
+                    clampedX = Math.max(-maxTranslateX, Math.min(clampedX, maxTranslateX));
+                    clampedY = Math.max(-maxTranslateY, Math.min(clampedY, maxTranslateY));
 
-                        zoomImage.style.transform = `scale(${zoomScale}) translate(${clampedX}px, ${clampedY}px)`;
-                    });
-
-                    offsetX = deltaX;
-                    offsetY = deltaY;
+                    zoomImage.style.transform = `scale(${zoomScale}) translate(${clampedX}px, ${clampedY}px)`;
                 }
             });
 
