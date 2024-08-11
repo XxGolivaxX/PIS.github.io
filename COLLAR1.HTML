@@ -37,6 +37,7 @@
             width: 100%;
             transition: transform 0.25s ease;
             cursor: grab;
+            touch-action: none; /* Previene el desplazamiento en dispositivos móviles */
         }
 
         .collar-info {
@@ -67,7 +68,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 PRUEBA23</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -85,10 +86,9 @@
             let isZoomed = false;
             let startX = 0;
             let startY = 0;
-            let lastX = 0;
-            let lastY = 0;
             let currentX = 0;
             let currentY = 0;
+            let initialTransform = '';
 
             // Zoom al pasar el mouse en modo escritorio
             zoomContainer.addEventListener('mousemove', (e) => {
@@ -126,16 +126,23 @@
 
                         zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
                         zoomImage.style.transform = `scale(${zoomScale})`;
+                        initialTransform = zoomImage.style.transform;
 
                         isZoomed = true;
                         zoomImage.style.cursor = 'move';
                     } else {
-                        zoomImage.style.transform = 'translate(0, 0) scale(1)';
+                        zoomImage.style.transform = 'scale(1)';
                         isZoomed = false;
-                        lastX = 0;
-                        lastY = 0;
                         zoomImage.style.cursor = 'grab';
                     }
+                }
+            });
+
+            zoomContainer.addEventListener('touchstart', (e) => {
+                if (isZoomed && window.innerWidth <= 768) {
+                    const touch = e.touches[0];
+                    startX = touch.clientX - currentX;
+                    startY = touch.clientY - currentY;
                 }
             });
 
@@ -147,22 +154,24 @@
 
                     zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(3)`;
 
-                    lastX = currentX;
-                    lastY = currentY;
-
                     e.preventDefault();
                 }
             });
 
-            zoomContainer.addEventListener('touchstart', (e) => {
+            zoomContainer.addEventListener('touchend', () => {
                 if (isZoomed && window.innerWidth <= 768) {
-                    const touch = e.touches[0];
-                    startX = touch.clientX - lastX;
-                    startY = touch.clientY - lastY;
+                    // Optionally reset transform or handle other end logic
                 }
             });
 
+            // Prevenir el menú contextual en el caso de un toque largo
+            zoomImage.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
 
+            document.addEventListener('gesturestart', (e) => {
+                e.preventDefault();
+            });
         });
     </script>
 </body>
