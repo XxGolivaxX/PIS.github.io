@@ -66,7 +66,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 </h1>
+        <h1>Collar GG-1 PRUEBA</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -82,42 +82,38 @@
             const zoomContainer = document.getElementById('zoom-container');
             const zoomImage = document.getElementById('zoom-image');
             let isTouching = false;
+            let startX = 0;
+            let startY = 0;
 
-            // Prevent scrolling when touching the image for zoom
+            // Detectar el inicio del toque
             zoomContainer.addEventListener('touchstart', (e) => {
-                e.preventDefault(); // Prevent default scrolling behavior
+                const touch = e.touches[0];
+                startX = touch.clientX;
+                startY = touch.clientY;
                 isTouching = true;
+            });
+
+            // Detectar el movimiento del toque
+            zoomContainer.addEventListener('touchmove', (e) => {
+                if (!isTouching) return;
+
+                const touch = e.touches[0];
+                const deltaX = Math.abs(touch.clientX - startX);
+                const deltaY = Math.abs(touch.clientY - startY);
+
+                // Si el movimiento es mayor en dirección vertical, permitir el desplazamiento
+                if (deltaY > deltaX) {
+                    isTouching = false; // Permite el desplazamiento
+                    return;
+                }
+
+                // Si el movimiento es mayor en dirección horizontal, activar el zoom
+                e.preventDefault();
                 handleTouchMove(e);
             });
 
-            zoomContainer.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // Prevent page scrolling
-                if (isTouching) {
-                    handleTouchMove(e);
-                }
-            });
-
-            zoomContainer.addEventListener('touchend', (e) => {
+            zoomContainer.addEventListener('touchend', () => {
                 isTouching = false;
-                zoomImage.style.transform = 'scale(1)';
-            });
-
-            zoomContainer.addEventListener('mousemove', (e) => {
-                if (!isTouching) {
-                    const containerRect = zoomContainer.getBoundingClientRect();
-                    const x = e.clientX - containerRect.left;
-                    const y = e.clientY - containerRect.top;
-
-                    const zoomScale = 2;
-                    const zoomX = x / containerRect.width * 100;
-                    const zoomY = y / containerRect.height * 100;
-
-                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(${zoomScale})`;
-                }
-            });
-
-            zoomContainer.addEventListener('mouseleave', () => {
                 zoomImage.style.transform = 'scale(1)';
             });
 
