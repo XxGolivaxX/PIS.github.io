@@ -66,7 +66,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 (error zoom)</h1>
+        <h1>Collar GG-1</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -81,29 +81,48 @@
         document.addEventListener('DOMContentLoaded', () => {
             const zoomContainer = document.getElementById('zoom-container');
             const zoomImage = document.getElementById('zoom-image');
-            let isTouching = false;
+            let isZoomed = false;
+            let lastTapTime = 0;
 
-            // Prevent scrolling when touching the image for zoom
-            zoomContainer.addEventListener('touchstart', (e) => {
-                e.preventDefault(); // Prevent default scrolling behavior
-                isTouching = true;
-                handleTouchMove(e);
+            // Detecta doble tap para zoom en móviles
+            zoomContainer.addEventListener('touchstart', function(e) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTapTime;
+
+                if (tapLength < 300 && tapLength > 0) {
+                    e.preventDefault();
+                    if (!isZoomed) {
+                        zoomImage.style.transform = 'scale(2)'; // Ajusta la escala según el nivel de zoom deseado
+                        isZoomed = true;
+                    } else {
+                        zoomImage.style.transform = 'scale(1)';
+                        isZoomed = false;
+                    }
+                }
+
+                lastTapTime = currentTime;
             });
 
-            zoomContainer.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // Prevent page scrolling
-                if (isTouching) {
-                    handleTouchMove(e);
+            // Maneja el movimiento al estar haciendo zoom en móviles
+            zoomContainer.addEventListener('touchmove', function(e) {
+                if (isZoomed) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const containerRect = zoomContainer.getBoundingClientRect();
+
+                    const offsetX = touch.clientX - containerRect.left;
+                    const offsetY = touch.clientY - containerRect.top;
+
+                    const moveX = Math.min(Math.max(offsetX - containerRect.width / 2, -containerRect.width), containerRect.width);
+                    const moveY = Math.min(Math.max(offsetY - containerRect.height / 2, -containerRect.height), containerRect.height);
+
+                    zoomImage.style.transform = `scale(2) translate(${moveX}px, ${moveY}px)`;
                 }
             });
 
-            zoomContainer.addEventListener('touchend', (e) => {
-                isTouching = false;
-                zoomImage.style.transform = 'scale(1)';
-            });
-
+            // Maneja el zoom en escritorio con el mouse
             zoomContainer.addEventListener('mousemove', (e) => {
-                if (!isTouching) {
+                if (!isZoomed) {
                     const containerRect = zoomContainer.getBoundingClientRect();
                     const x = e.clientX - containerRect.left;
                     const y = e.clientY - containerRect.top;
@@ -117,23 +136,10 @@
                 }
             });
 
+            // Restablece la imagen al estado original al salir del área de zoom en escritorio
             zoomContainer.addEventListener('mouseleave', () => {
                 zoomImage.style.transform = 'scale(1)';
             });
-
-            function handleTouchMove(e) {
-                const touch = e.touches[0];
-                const containerRect = zoomContainer.getBoundingClientRect();
-                const x = touch.clientX - containerRect.left;
-                const y = touch.clientY - containerRect.top;
-
-                const zoomScale = 5;
-                const zoomX = x / containerRect.width * 100;
-                const zoomY = y / containerRect.height * 100;
-
-                zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                zoomImage.style.transform = `scale(${zoomScale})`;
-            }
         });
     </script>
 </body>
