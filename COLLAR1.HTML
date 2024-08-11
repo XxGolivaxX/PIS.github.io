@@ -67,7 +67,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 PRUEBAzoom</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -92,7 +92,12 @@
             let currentY = 0;
             let longPressTimeout;
 
-            // Activa el zoom solo si el toque dura más de 300ms
+            // Deshabilitar el menú contextual para evitar la descarga de la imagen
+            zoomImage.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+
+            // Evita el zoom accidental activando el zoom solo después de 200ms de toque
             zoomContainer.addEventListener('touchstart', (e) => {
                 longPressTimeout = setTimeout(() => {
                     const touch = e.touches[0];
@@ -105,7 +110,7 @@
                         const x = touch.clientX - containerRect.left;
                         const y = touch.clientY - containerRect.top;
 
-                        const zoomScale = 3;
+                        const zoomScale = 3; // Aumenta este valor para más zoom
                         const zoomX = x / containerRect.width * 100;
                         const zoomY = y / containerRect.height * 100;
 
@@ -113,11 +118,11 @@
                         zoomImage.style.transform = `scale(${zoomScale})`;
                         isZoomed = true;
                     }
-                }, 300); // 300ms para evitar el zoom accidental
+                }, 200); // Reduce el tiempo para activar el zoom
             });
 
             zoomContainer.addEventListener('touchmove', (e) => {
-                clearTimeout(longPressTimeout); // Cancela el zoom si se mueve antes de los 300ms
+                clearTimeout(longPressTimeout); // Cancela el zoom si se mueve antes de 200ms
                 if (!isTouching) return;
 
                 const touch = e.touches[0];
@@ -148,6 +153,7 @@
     </script>
 </body>
 </html>
+
 
 
 
