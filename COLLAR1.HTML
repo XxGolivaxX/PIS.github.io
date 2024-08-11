@@ -67,7 +67,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 P23</h1>
+        <h1>Collar GG-1 PRUEBA</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -90,37 +90,40 @@
             let isZoomed = false;
             let currentX = 0;
             let currentY = 0;
+            let longPressTimeout;
 
+            // Activa el zoom solo si el toque dura más de 300ms
             zoomContainer.addEventListener('touchstart', (e) => {
-                const touch = e.touches[0];
-                startX = touch.clientX - lastX;
-                startY = touch.clientY - lastY;
-                isTouching = true;
+                longPressTimeout = setTimeout(() => {
+                    const touch = e.touches[0];
+                    startX = touch.clientX - lastX;
+                    startY = touch.clientY - lastY;
+                    isTouching = true;
 
-                // Si la imagen está en su tamaño original, establecer el punto de origen del zoom
-                if (!isZoomed) {
-                    const containerRect = zoomContainer.getBoundingClientRect();
-                    const x = touch.clientX - containerRect.left;
-                    const y = touch.clientY - containerRect.top;
+                    if (!isZoomed) {
+                        const containerRect = zoomContainer.getBoundingClientRect();
+                        const x = touch.clientX - containerRect.left;
+                        const y = touch.clientY - containerRect.top;
 
-                    const zoomScale = 3; // Aumenta este valor para más zoom
-                    const zoomX = x / containerRect.width * 100;
-                    const zoomY = y / containerRect.height * 100;
+                        const zoomScale = 3;
+                        const zoomX = x / containerRect.width * 100;
+                        const zoomY = y / containerRect.height * 100;
 
-                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(${zoomScale})`;
-                    isZoomed = true;
-                }
+                        zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                        zoomImage.style.transform = `scale(${zoomScale})`;
+                        isZoomed = true;
+                    }
+                }, 300); // 300ms para evitar el zoom accidental
             });
 
             zoomContainer.addEventListener('touchmove', (e) => {
+                clearTimeout(longPressTimeout); // Cancela el zoom si se mueve antes de los 300ms
                 if (!isTouching) return;
 
                 const touch = e.touches[0];
                 currentX = touch.clientX - startX;
                 currentY = touch.clientY - startY;
 
-                // Aplicar la nueva posición al mover la imagen
                 zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(3)`;
 
                 lastX = currentX;
@@ -130,15 +133,14 @@
             });
 
             zoomContainer.addEventListener('touchend', () => {
+                clearTimeout(longPressTimeout);
                 isTouching = false;
-                // Restaurar el zoom y la posición de la imagen a su estado original
                 zoomImage.style.transform = 'translate(0, 0) scale(1)';
                 lastX = 0;
                 lastY = 0;
                 isZoomed = false;
             });
 
-            // Deshabilitar el zoom predeterminado del navegador
             document.addEventListener('gesturestart', (e) => {
                 e.preventDefault();
             });
@@ -146,6 +148,7 @@
     </script>
 </body>
 </html>
+
 
 
 
