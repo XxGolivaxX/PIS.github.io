@@ -31,7 +31,7 @@
             width: 100%;
             max-width: 350px;
             overflow: hidden;
-            background-color: #f0f0f0; /* Color de fondo para áreas no cubiertas */
+            background-color: #611b1b; /* Color de fondo para áreas no cubiertas */
         }
 
         .collar-img img {
@@ -70,7 +70,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 container</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -166,10 +166,8 @@
                         let clampedY = deltaY;
 
                         // Limitar el desplazamiento para evitar el área blanca
-                        if (deltaX < -maxTranslateX) clampedX = -maxTranslateX;
-                        if (deltaX > maxTranslateX) clampedX = maxTranslateX;
-                        if (deltaY < -maxTranslateY) clampedY = -maxTranslateY;
-                        if (deltaY > maxTranslateY) clampedY = maxTranslateY;
+                        clampedX = Math.max(-maxTranslateX, Math.min(clampedX, maxTranslateX));
+                        clampedY = Math.max(-maxTranslateY, Math.min(clampedY, maxTranslateY));
 
                         zoomImage.style.transform = `scale(${zoomScale}) translate(${clampedX}px, ${clampedY}px)`;
                     });
@@ -197,3 +195,4 @@
     </script>
 </body>
 </html>
+
