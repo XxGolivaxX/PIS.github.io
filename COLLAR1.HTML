@@ -73,7 +73,6 @@
             <img src="imagenes/GG-1.jpg" alt="Collar GG-1" id="zoom-image">
         </div>
         <div class="collar-info">
-            <p>Descripción detallada del collar GG-1. Aquí puedes incluir información sobre los materiales, el proceso de fabricación, y cualquier otro detalle relevante que quieras destacar.</p>
             <a href="index.html" class="btn-regresar">Volver al Catálogo</a>
         </div>
     </div>
@@ -84,12 +83,17 @@
             let isTouching = false;
             let isZoomed = false;
 
+            // Detectar doble tap para hacer zoom
             zoomContainer.addEventListener('touchstart', (e) => {
                 if (isZoomed) {
                     e.preventDefault(); // Evita el comportamiento de desplazamiento predeterminado solo cuando está haciendo zoom
                 }
-                isTouching = true;
-                handleTouchMove(e);
+                const tapTime = new Date().getTime();
+                if (tapTime - lastTapTime < 300) {
+                    // Se detectó un doble tap
+                    toggleZoom(e);
+                }
+                lastTapTime = tapTime;
             });
 
             zoomContainer.addEventListener('touchmove', (e) => {
@@ -103,8 +107,8 @@
                 isTouching = false;
             });
 
-            // Maneja doble tap para zoom
-            zoomContainer.addEventListener('dblclick', () => {
+            // Función para manejar el zoom
+            function toggleZoom(e) {
                 if (!isZoomed) {
                     zoomImage.style.transform = 'scale(3)';
                     isZoomed = true;
@@ -112,7 +116,7 @@
                     zoomImage.style.transform = 'scale(1)';
                     isZoomed = false;
                 }
-            });
+            }
 
             function handleTouchMove(e) {
                 const touch = e.touches[0];
@@ -120,14 +124,16 @@
                 const x = touch.clientX - containerRect.left;
                 const y = touch.clientY - containerRect.top;
 
-                const zoomScale = 3;
                 const zoomX = x / containerRect.width * 100;
                 const zoomY = y / containerRect.height * 100;
 
                 zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                zoomImage.style.transform = `scale(${zoomScale})`;
+                if (isZoomed) {
+                    zoomImage.style.transform = `scale(3)`;
+                }
             }
         });
     </script>
 </body>
 </html>
+
