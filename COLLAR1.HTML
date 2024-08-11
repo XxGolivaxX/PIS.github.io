@@ -67,7 +67,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 P23</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -131,6 +131,11 @@
 
             zoomContainer.addEventListener('touchend', () => {
                 isTouching = false;
+                // Restaurar el zoom y la posición de la imagen a su estado original
+                zoomImage.style.transform = 'translate(0, 0) scale(1)';
+                lastX = 0;
+                lastY = 0;
+                isZoomed = false;
             });
 
             // Deshabilitar el zoom predeterminado del navegador
@@ -141,5 +146,6 @@
     </script>
 </body>
 </html>
+
 
 
