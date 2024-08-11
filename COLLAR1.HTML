@@ -87,7 +87,8 @@
             let startY = 0;
             let lastX = 0;
             let lastY = 0;
-            let isTouching = false;
+            let currentX = 0;
+            let currentY = 0;
 
             // Zoom al pasar el mouse en modo escritorio
             zoomContainer.addEventListener('mousemove', (e) => {
@@ -138,47 +139,32 @@
                 }
             });
 
-            zoomContainer.addEventListener('touchstart', (e) => {
+            zoomContainer.addEventListener('touchmove', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
                     const touch = e.touches[0];
-                    startX = touch.clientX - lastX;
-                    startY = touch.clientY - lastY;
-                    isTouching = true;
-                }
-            });
+                    currentX = touch.clientX - startX;
+                    currentY = touch.clientY - startY;
 
-            zoomContainer.addEventListener('touchmove', (e) => {
-                if (isZoomed && window.innerWidth <= 768 && isTouching) {
-                    const touch = e.touches[0];
-                    const deltaX = touch.clientX - startX;
-                    const deltaY = touch.clientY - startY;
+                    zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(3)`;
 
-                    zoomImage.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(3)`;
-
-                    lastX = deltaX;
-                    lastY = deltaY;
-                    startX = touch.clientX;
-                    startY = touch.clientY;
+                    lastX = currentX;
+                    lastY = currentY;
 
                     e.preventDefault();
                 }
             });
 
-            zoomContainer.addEventListener('touchend', () => {
+            zoomContainer.addEventListener('touchstart', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
-                    isTouching = false;
+                    const touch = e.touches[0];
+                    startX = touch.clientX - lastX;
+                    startY = touch.clientY - lastY;
                 }
             });
 
-            // Prevenir el menú contextual en el caso de un toque largo
-            zoomImage.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-            });
 
-            document.addEventListener('gesturestart', (e) => {
-                e.preventDefault();
-            });
         });
     </script>
 </body>
 </html>
+
