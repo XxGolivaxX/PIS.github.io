@@ -38,6 +38,7 @@
             transition: transform 0.25s ease;
             cursor: grab;
             touch-action: none; /* Previene el desplazamiento en dispositivos móviles */
+            will-change: transform; /* Optimiza el rendimiento de transformaciones */
         }
 
         .collar-info {
@@ -68,7 +69,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 PRUEBA3</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -86,9 +87,8 @@
             let isZoomed = false;
             let startX = 0;
             let startY = 0;
-            let lastX = 0;
-            let lastY = 0;
-            let transformValue = '';
+            let offsetX = 0;
+            let offsetY = 0;
 
             // Zoom al pasar el mouse en modo escritorio
             zoomContainer.addEventListener('mousemove', (e) => {
@@ -125,9 +125,8 @@
                         const zoomY = y / containerRect.height * 100;
 
                         zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                        zoomImage.style.transform = `scale(${zoomScale})`;
+                        zoomImage.style.transform = `scale(${zoomScale}) translate(${offsetX}px, ${offsetY}px)`;
 
-                        transformValue = zoomImage.style.transform;
                         isZoomed = true;
                         zoomImage.style.cursor = 'move';
                     } else {
@@ -141,8 +140,8 @@
             zoomContainer.addEventListener('touchstart', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
                     const touch = e.touches[0];
-                    startX = touch.clientX - lastX;
-                    startY = touch.clientY - lastY;
+                    startX = touch.clientX - offsetX;
+                    startY = touch.clientY - offsetY;
                 }
             });
 
@@ -154,19 +153,18 @@
                     const deltaX = touch.clientX - startX;
                     const deltaY = touch.clientY - startY;
 
-                    // Usar requestAnimationFrame para mejorar la fluidez del movimiento
                     requestAnimationFrame(() => {
-                        zoomImage.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(3)`;
+                        zoomImage.style.transform = `scale(3) translate(${deltaX}px, ${deltaY}px)`;
                     });
 
-                    lastX = deltaX;
-                    lastY = deltaY;
+                    offsetX = deltaX;
+                    offsetY = deltaY;
                 }
             });
 
             zoomContainer.addEventListener('touchend', () => {
                 if (isZoomed && window.innerWidth <= 768) {
-                    // Resetear valores si es necesario
+                    // Opcional: ajustes adicionales si es necesario
                 }
             });
 
@@ -182,5 +180,3 @@
     </script>
 </body>
 </html>
-
-
