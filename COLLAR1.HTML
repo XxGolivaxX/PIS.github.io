@@ -37,8 +37,6 @@
             width: 100%;
             transition: transform 0.25s ease;
             cursor: grab;
-            touch-action: none; /* Previene el desplazamiento en dispositivos móviles */
-            will-change: transform; /* Optimiza el rendimiento de transformaciones */
         }
 
         .collar-info {
@@ -69,7 +67,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 PRUEBwwwA</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -87,8 +85,10 @@
             let isZoomed = false;
             let startX = 0;
             let startY = 0;
-            let offsetX = 0;
-            let offsetY = 0;
+            let lastX = 0;
+            let lastY = 0;
+            let currentX = 0;
+            let currentY = 0;
 
             // Zoom al pasar el mouse en modo escritorio
             zoomContainer.addEventListener('mousemove', (e) => {
@@ -97,7 +97,7 @@
                     const x = e.clientX - containerRect.left;
                     const y = e.clientY - containerRect.top;
 
-                    const zoomScale = 2.5; // Ajusta este valor para controlar el nivel de zoom
+                    const zoomScale = 3; // Aumenta este valor para más zoom
                     const zoomX = x / containerRect.width * 100;
                     const zoomY = y / containerRect.height * 100;
 
@@ -120,7 +120,7 @@
                         const x = e.clientX - containerRect.left;
                         const y = e.clientY - containerRect.top;
 
-                        const zoomScale = 2.5; // Ajusta este valor para controlar el nivel de zoom
+                        const zoomScale = 3; // Aumenta este valor para más zoom
                         const zoomX = x / containerRect.width * 100;
                         const zoomY = y / containerRect.height * 100;
 
@@ -130,56 +130,35 @@
                         isZoomed = true;
                         zoomImage.style.cursor = 'move';
                     } else {
-                        zoomImage.style.transform = 'scale(1)';
+                        zoomImage.style.transform = 'translate(0, 0) scale(1)';
                         isZoomed = false;
+                        lastX = 0;
+                        lastY = 0;
                         zoomImage.style.cursor = 'grab';
                     }
+                }
+            });
+
+            zoomContainer.addEventListener('touchmove', (e) => {
+                if (isZoomed && window.innerWidth <= 768) {
+                    const touch = e.touches[0];
+                    currentX = touch.clientX - startX;
+                    currentY = touch.clientY - startY;
+
+                    zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(3)`;
+
+                    lastX = currentX;
+                    lastY = currentY;
+
+                    e.preventDefault();
                 }
             });
 
             zoomContainer.addEventListener('touchstart', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
                     const touch = e.touches[0];
-                    startX = touch.clientX - offsetX;
-                    startY = touch.clientY - offsetY;
-                }
-            });
-
-            zoomContainer.addEventListener('touchmove', (e) => {
-                if (isZoomed && window.innerWidth <= 768) {
-                    e.preventDefault(); // Prevenir el desplazamiento por defecto
-
-                    const touch = e.touches[0];
-                    const deltaX = touch.clientX - startX;
-                    const deltaY = touch.clientY - startY;
-
-                    requestAnimationFrame(() => {
-                        const containerRect = zoomContainer.getBoundingClientRect();
-                        const imageRect = zoomImage.getBoundingClientRect();
-
-                        const zoomScale = 2.5;
-                        const maxTranslateX = (imageRect.width * zoomScale - containerRect.width) / 2;
-                        const maxTranslateY = (imageRect.height * zoomScale - containerRect.height) / 2;
-
-                        let clampedX = deltaX;
-                        let clampedY = deltaY;
-
-                        if (deltaX < -maxTranslateX) clampedX = -maxTranslateX;
-                        if (deltaX > maxTranslateX) clampedX = maxTranslateX;
-                        if (deltaY < -maxTranslateY) clampedY = -maxTranslateY;
-                        if (deltaY > maxTranslateY) clampedY = maxTranslateY;
-
-                        zoomImage.style.transform = `scale(${zoomScale}) translate(${clampedX}px, ${clampedY}px)`;
-                    });
-
-                    offsetX = deltaX;
-                    offsetY = deltaY;
-                }
-            });
-
-            zoomContainer.addEventListener('touchend', () => {
-                if (isZoomed && window.innerWidth <= 768) {
-                    // Opcional: ajustes adicionales si es necesario
+                    startX = touch.clientX - lastX;
+                    startY = touch.clientY - lastY;
                 }
             });
 
@@ -195,5 +174,3 @@
     </script>
 </body>
 </html>
-
-
