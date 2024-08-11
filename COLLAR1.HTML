@@ -38,6 +38,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
+            overflow: hidden;
         }
 
         .zoom-content img {
@@ -73,7 +74,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 zoomx3 mejorado</h1>
+        <h1>Collar GG-1 zoomx3</h1>
     </header>
     <div class="container">
         <div class="zoom-container" id="zoom-container">
@@ -113,10 +114,12 @@
                         zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
                         zoomImage.style.transform = `scale(3)`; // Zoom al 300%
                         zoomContent.style.cursor = 'grabbing'; // Cambia el cursor para indicar que está siendo movido
+                        zoomContent.style.overflow = 'auto'; // Permite el desplazamiento
                         isZoomed = true;
                     } else {
                         zoomImage.style.transform = 'scale(1)';
                         zoomContent.style.cursor = 'grab'; // Cambia el cursor de vuelta al estado original
+                        zoomContent.style.overflow = 'hidden'; // Desactiva el desplazamiento
                         isZoomed = false;
                     }
                 }
@@ -143,6 +146,7 @@
             zoomContainer.addEventListener('mouseleave', () => {
                 zoomImage.style.transform = 'scale(1)';
                 zoomContent.style.cursor = 'grab'; // Cambia el cursor de vuelta al estado original
+                zoomContent.style.overflow = 'hidden'; // Desactiva el desplazamiento
             });
 
             // Maneja el desplazamiento de la imagen en estado de zoom
@@ -179,4 +183,5 @@
     </script>
 </body>
 </html>
+
  
