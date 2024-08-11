@@ -66,7 +66,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 </h1>
+        <h1>Collar GG-1</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -82,43 +82,36 @@
             const zoomContainer = document.getElementById('zoom-container');
             const zoomImage = document.getElementById('zoom-image');
             let isTouching = false;
+            let isZoomed = false;
 
-            // Prevent scrolling when touching the image for zoom
             zoomContainer.addEventListener('touchstart', (e) => {
-                e.preventDefault(); // Prevent default scrolling behavior
+                if (isZoomed) {
+                    e.preventDefault(); // Evita el comportamiento de desplazamiento predeterminado solo cuando está haciendo zoom
+                }
                 isTouching = true;
                 handleTouchMove(e);
             });
 
             zoomContainer.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // Prevent page scrolling
-                if (isTouching) {
+                if (isTouching && isZoomed) {
+                    e.preventDefault(); // Evita el desplazamiento de la página solo si se está haciendo zoom
                     handleTouchMove(e);
                 }
             });
 
-            zoomContainer.addEventListener('touchend', (e) => {
+            zoomContainer.addEventListener('touchend', () => {
                 isTouching = false;
-                zoomImage.style.transform = 'scale(1)';
             });
 
-            zoomContainer.addEventListener('mousemove', (e) => {
-                if (!isTouching) {
-                    const containerRect = zoomContainer.getBoundingClientRect();
-                    const x = e.clientX - containerRect.left;
-                    const y = e.clientY - containerRect.top;
-
-                    const zoomScale = 2;
-                    const zoomX = x / containerRect.width * 100;
-                    const zoomY = y / containerRect.height * 100;
-
-                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(${zoomScale})`;
+            // Maneja doble tap para zoom
+            zoomContainer.addEventListener('dblclick', () => {
+                if (!isZoomed) {
+                    zoomImage.style.transform = 'scale(3)';
+                    isZoomed = true;
+                } else {
+                    zoomImage.style.transform = 'scale(1)';
+                    isZoomed = false;
                 }
-            });
-
-            zoomContainer.addEventListener('mouseleave', () => {
-                zoomImage.style.transform = 'scale(1)';
             });
 
             function handleTouchMove(e) {
@@ -127,7 +120,7 @@
                 const x = touch.clientX - containerRect.left;
                 const y = touch.clientY - containerRect.top;
 
-                const zoomScale = 5;
+                const zoomScale = 3;
                 const zoomX = x / containerRect.width * 100;
                 const zoomY = y / containerRect.height * 100;
 
@@ -138,4 +131,3 @@
     </script>
 </body>
 </html>
-
