@@ -69,7 +69,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 PRUEBA</h1>
+        <h1>Collar GG-1 5</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -89,6 +89,7 @@
             let startY = 0;
             let currentX = 0;
             let currentY = 0;
+            let lastTouch = { x: 0, y: 0 };
 
             // Zoom al pasar el mouse en modo escritorio
             zoomContainer.addEventListener('mousemove', (e) => {
@@ -137,8 +138,6 @@
                 }
             });
 
-            let lastTouch = { x: 0, y: 0 };
-
             // Movimiento suave durante el zoom en dispositivos móviles
             zoomContainer.addEventListener('touchmove', (e) => {
                 if (isZoomed && window.innerWidth <= 768) {
@@ -146,6 +145,7 @@
 
                     const touch = e.touches[0];
                     const containerRect = zoomContainer.getBoundingClientRect();
+                    const imgRect = zoomImage.getBoundingClientRect();
                     const zoomScale = 3;
 
                     const touchX = touch.clientX - containerRect.left;
@@ -156,6 +156,13 @@
 
                     currentX += deltaX;
                     currentY += deltaY;
+
+                    // Calcular los límites para el desplazamiento
+                    const maxTranslateX = (zoomImage.offsetWidth * zoomScale - zoomContainer.offsetWidth) / 2;
+                    const maxTranslateY = (zoomImage.offsetHeight * zoomScale - zoomContainer.offsetHeight) / 2;
+
+                    currentX = Math.max(-maxTranslateX, Math.min(maxTranslateX, currentX));
+                    currentY = Math.max(-maxTranslateY, Math.min(maxTranslateY, currentY));
 
                     // Uso de requestAnimationFrame para suavizar el movimiento
                     requestAnimationFrame(() => {
