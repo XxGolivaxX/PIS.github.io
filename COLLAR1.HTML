@@ -36,6 +36,7 @@
         .collar-img img {
             width: 100%;
             transition: transform 0.25s ease;
+            cursor: grab;
         }
 
         .collar-info {
@@ -66,7 +67,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 P2</h1>
+        <h1>Collar GG-1 PRUEBA</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -84,59 +85,61 @@
             let isTouching = false;
             let startX = 0;
             let startY = 0;
+            let lastX = 0;
+            let lastY = 0;
+            let isZoomed = false;
+            let currentX = 0;
+            let currentY = 0;
 
-            // Detectar el inicio del toque
             zoomContainer.addEventListener('touchstart', (e) => {
                 const touch = e.touches[0];
-                startX = touch.clientX;
-                startY = touch.clientY;
+                startX = touch.clientX - lastX;
+                startY = touch.clientY - lastY;
                 isTouching = true;
+
+                // Si la imagen está en su tamaño original, establecer el punto de origen del zoom
+                if (!isZoomed) {
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const x = touch.clientX - containerRect.left;
+                    const y = touch.clientY - containerRect.top;
+
+                    const zoomScale = 3; // Aumenta este valor para más zoom
+                    const zoomX = x / containerRect.width * 100;
+                    const zoomY = y / containerRect.height * 100;
+
+                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                    zoomImage.style.transform = `scale(${zoomScale})`;
+                    isZoomed = true;
+                }
             });
 
-            // Detectar el movimiento del toque
             zoomContainer.addEventListener('touchmove', (e) => {
                 if (!isTouching) return;
 
                 const touch = e.touches[0];
-                const deltaX = Math.abs(touch.clientX - startX);
-                const deltaY = Math.abs(touch.clientY - startY);
+                currentX = touch.clientX - startX;
+                currentY = touch.clientY - startY;
 
-                // Si el movimiento es mayor en dirección vertical, permitir el desplazamiento
-                if (deltaY > deltaX) {
-                    isTouching = false; // Permite el desplazamiento
-                    return;
-                }
+                // Aplicar la nueva posición al mover la imagen
+                zoomImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(3)`;
 
-                // Si el movimiento es mayor en dirección horizontal, activar el zoom
+                lastX = currentX;
+                lastY = currentY;
+
                 e.preventDefault();
-                handleTouchMove(e);
             });
 
             zoomContainer.addEventListener('touchend', () => {
                 isTouching = false;
-                zoomImage.style.transform = 'scale(1)';
             });
 
-            function handleTouchMove(e) {
-                const touch = e.touches[0];
-                const containerRect = zoomContainer.getBoundingClientRect();
-                const x = touch.clientX - containerRect.left;
-                const y = touch.clientY - containerRect.top;
-
-                const zoomScale = 4;
-                const zoomX = x / containerRect.width * 100;
-                const zoomY = y / containerRect.height * 100;
-
-                zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                zoomImage.style.transform = `scale(${zoomScale})`;
-            }
-        });
-
-        // Deshabilitar el zoom predeterminado del navegador
-        document.addEventListener('gesturestart', (e) => {
-            e.preventDefault();
+            // Deshabilitar el zoom predeterminado del navegador
+            document.addEventListener('gesturestart', (e) => {
+                e.preventDefault();
+            });
         });
     </script>
 </body>
 </html>
+
 
