@@ -70,7 +70,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1</h1>
+        <h1>Collar GG-1 PRUEBA</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -155,13 +155,15 @@
                     const deltaY = touch.clientY - startY;
 
                     requestAnimationFrame(() => {
-                        // Asegura que la imagen se mantenga dentro del contenedor
                         const containerRect = zoomContainer.getBoundingClientRect();
                         const imageRect = zoomImage.getBoundingClientRect();
-                        const maxX = Math.max(containerRect.width - imageRect.width / 2, 0);
-                        const maxY = Math.max(containerRect.height - imageRect.height / 2, 0);
-                        const clampedX = Math.min(Math.max(deltaX, -maxX), maxX);
-                        const clampedY = Math.min(Math.max(deltaY, -maxY), maxY);
+
+                        // Calcular límites de movimiento
+                        const maxTranslateX = Math.max(0, (imageRect.width - containerRect.width) / 2);
+                        const maxTranslateY = Math.max(0, (imageRect.height - containerRect.height) / 2);
+
+                        const clampedX = Math.min(Math.max(deltaX, -maxTranslateX), maxTranslateX);
+                        const clampedY = Math.min(Math.max(deltaY, -maxTranslateY), maxTranslateY);
 
                         zoomImage.style.transform = `scale(2.5) translate(${clampedX}px, ${clampedY}px)`; // Ajusta el nivel de zoom
                     });
@@ -189,5 +191,3 @@
     </script>
 </body>
 </html>
-
-
