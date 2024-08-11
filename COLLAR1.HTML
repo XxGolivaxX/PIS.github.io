@@ -66,7 +66,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1</h1>
+        <h1>Collar GG-1 PZOOM</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -83,6 +83,9 @@
             const zoomImage = document.getElementById('zoom-image');
             let isZoomed = false;
             let lastTapTime = 0;
+            let scale = 2;
+            let startX = 0;
+            let startY = 0;
 
             // Detecta doble tap para zoom en móviles
             zoomContainer.addEventListener('touchstart', function(e) {
@@ -92,7 +95,18 @@
                 if (tapLength < 300 && tapLength > 0) {
                     e.preventDefault();
                     if (!isZoomed) {
-                        zoomImage.style.transform = 'scale(2)'; // Ajusta la escala según el nivel de zoom deseado
+                        const touch = e.touches[0];
+                        const rect = zoomImage.getBoundingClientRect();
+
+                        const offsetX = touch.clientX - rect.left;
+                        const offsetY = touch.clientY - rect.top;
+
+                        // Centra la imagen en la posición donde se hizo el doble tap
+                        startX = (offsetX / rect.width) * 100;
+                        startY = (offsetY / rect.height) * 100;
+
+                        zoomImage.style.transformOrigin = `${startX}% ${startY}%`;
+                        zoomImage.style.transform = `scale(${scale})`;
                         isZoomed = true;
                     } else {
                         zoomImage.style.transform = 'scale(1)';
@@ -108,15 +122,15 @@
                 if (isZoomed) {
                     e.preventDefault();
                     const touch = e.touches[0];
-                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const rect = zoomImage.getBoundingClientRect();
 
-                    const offsetX = touch.clientX - containerRect.left;
-                    const offsetY = touch.clientY - containerRect.top;
+                    const offsetX = touch.clientX - rect.left;
+                    const offsetY = touch.clientY - rect.top;
 
-                    const moveX = Math.min(Math.max(offsetX - containerRect.width / 2, -containerRect.width), containerRect.width);
-                    const moveY = Math.min(Math.max(offsetY - containerRect.height / 2, -containerRect.height), containerRect.height);
+                    const moveX = (offsetX - rect.width / 2) / rect.width * 100;
+                    const moveY = (offsetY - rect.height / 2) / rect.height * 100;
 
-                    zoomImage.style.transform = `scale(2) translate(${moveX}px, ${moveY}px)`;
+                    zoomImage.style.transform = `scale(${scale}) translate(${moveX}%, ${moveY}%)`;
                 }
             });
 
@@ -127,12 +141,11 @@
                     const x = e.clientX - containerRect.left;
                     const y = e.clientY - containerRect.top;
 
-                    const zoomScale = 2;
                     const zoomX = x / containerRect.width * 100;
                     const zoomY = y / containerRect.height * 100;
 
                     zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(${zoomScale})`;
+                    zoomImage.style.transform = `scale(${scale})`;
                 }
             });
 
