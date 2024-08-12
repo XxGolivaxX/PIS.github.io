@@ -90,7 +90,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 (FUNCIONA?)</h1>
+        <h1>Collar GG-1 zoomx3FAST</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -114,15 +114,14 @@
             const DOUBLE_TAP_DELAY = 300; // Tiempo en milisegundos para considerar un doble toque
 
             // Detecta doble tap para zoom en móviles
-            zoomContainer.addEventListener('touchstart', (e) => {
+            zoomContainer.addEventListener('touchend', (e) => {
                 const currentTime = new Date().getTime();
                 const tapLength = currentTime - touchStartTime;
 
-                // Maneja el doble toque
                 if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) {
                     e.preventDefault(); // Evita el comportamiento predeterminado del desplazamiento
                     if (!isZoomed) {
-                        const touch = e.touches[0];
+                        const touch = e.changedTouches[0];
                         const containerRect = zoomContainer.getBoundingClientRect();
                         const x = touch.clientX - containerRect.left;
                         const y = touch.clientY - containerRect.top;
@@ -158,6 +157,9 @@
 
             // Guarda la posición inicial del toque en móviles
             zoomContainer.addEventListener('touchstart', (e) => {
+                const currentTime = new Date().getTime();
+                touchStartTime = currentTime;
+
                 if (isZoomed) {
                     const touch = e.touches[0];
                     startX = touch.clientX;
@@ -206,4 +208,5 @@
     </script>
 </body>
 </html>
+
 
