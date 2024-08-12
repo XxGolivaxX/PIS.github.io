@@ -88,7 +88,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 zoomx3</h1>
+        <h1>Collar GG-1 zoomx3FAST</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -144,8 +144,8 @@
                 if (isZoomed) {
                     e.preventDefault();
                     const touch = e.touches[0];
-                    const moveX = touch.clientX - startX;
-                    const moveY = touch.clientY - startY;
+                    const moveX = (touch.clientX - startX) * 2; // Aumenta la velocidad de desplazamiento en X
+                    const moveY = (touch.clientY - startY) * 2; // Aumenta la velocidad de desplazamiento en Y
 
                     zoomImage.style.transform = `translate(${initialX + moveX}px, ${initialY + moveY}px) scale(3)`;
                 }
