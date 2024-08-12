@@ -85,9 +85,13 @@
             let scale = 1;
             let startDistance = 0;
             let startScale = 1;
+            let startX = 0;
+            let startY = 0;
+            let currentX = 0;
+            let currentY = 0;
 
             function updateTransform() {
-                zoomImage.style.transform = `scale(${scale})`;
+                zoomImage.style.transform = `scale(${scale}) translate(${currentX}px, ${currentY}px)`;
             }
 
             function handlePinch(e) {
@@ -114,6 +118,10 @@
                 if (e.touches.length === 2) {
                     e.preventDefault(); // Prevent default zoom behavior
                     handlePinch(e);
+
+                    // Calculate the initial touch positions
+                    startX = e.touches[0].clientX - currentX;
+                    startY = e.touches[0].clientY - currentY;
                 }
             });
 
@@ -121,23 +129,34 @@
                 if (e.touches.length === 2) {
                     e.preventDefault(); // Prevent default zoom behavior
                     handlePinch(e);
+
+                    // Update the position of the image
+                    const touch = e.touches[0];
+                    currentX = touch.clientX - startX;
+                    currentY = touch.clientY - startY;
+                    updateTransform();
                 }
             });
 
             zoomContainer.addEventListener('touchend', () => {
                 startDistance = 0;
                 startScale = scale;
+                startX = 0;
+                startY = 0;
             });
 
             zoomContainer.addEventListener('mousemove', (e) => {
-                const containerRect = zoomContainer.getBoundingClientRect();
-                const x = e.clientX - containerRect.left;
-                const y = e.clientY - containerRect.top;
-                const zoomX = x / containerRect.width * 100;
-                const zoomY = y / containerRect.height * 100;
+                if (e.buttons === 1) {
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const x = e.clientX - containerRect.left;
+                    const y = e.clientY - containerRect.top;
 
-                zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                zoomImage.style.transform = `scale(2)`;
+                    const zoomX = x / containerRect.width * 100;
+                    const zoomY = y / containerRect.height * 100;
+
+                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                    zoomImage.style.transform = `scale(2)`;
+                }
             });
 
             zoomContainer.addEventListener('mouseleave', () => {
