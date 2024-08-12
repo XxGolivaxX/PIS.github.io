@@ -66,7 +66,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 pzoom</h1>
+        <h1>Collar GG-1</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -122,8 +122,8 @@
                 if (isZoomed) {
                     startX = e.touches[0].clientX;
                     startY = e.touches[0].clientY;
-                    offsetX = parseInt(getComputedStyle(zoomImage).transform.split(',')[4] || 0, 10);
-                    offsetY = parseInt(getComputedStyle(zoomImage).transform.split(',')[5] || 0, 10);
+                    offsetX = parseFloat(zoomImage.style.transform.split('translate(')[1]?.split('px')[0] || 0);
+                    offsetY = parseFloat(zoomImage.style.transform.split('translate(')[1]?.split('px')[1] || 0);
                 }
             });
 
@@ -162,4 +162,3 @@
     </script>
 </body>
 </html>
-
