@@ -38,6 +38,22 @@
             transition: transform 0.25s ease;
         }
 
+        .zoom-close-btn {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
         .collar-info {
             margin-top: 20px;
             text-align: center;
@@ -61,16 +77,21 @@
             .collar-info {
                 margin-top: 15px;
             }
+
+            .zoom-close-btn {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Collar GG-1</h1>
+        <h1>Collar GG-1 zoomx3</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
             <img src="imagenes/GG-1.jpg" alt="Collar GG-1" id="zoom-image">
+            <button class="zoom-close-btn" id="zoom-close-btn">✖</button>
         </div>
         <div class="collar-info">
             <p>Descripción detallada del collar GG-1. Aquí puedes incluir información sobre los materiales, el proceso de fabricación, y cualquier otro detalle relevante que quieras destacar.</p>
@@ -81,83 +102,73 @@
         document.addEventListener('DOMContentLoaded', () => {
             const zoomContainer = document.getElementById('zoom-container');
             const zoomImage = document.getElementById('zoom-image');
+            const zoomCloseBtn = document.getElementById('zoom-close-btn');
             let isZoomed = false;
             let lastTapTime = 0;
-            let startX, startY, offsetX, offsetY;
 
-            function resetZoom() {
-                zoomImage.style.transform = 'scale(1) translate(0, 0)';
-                isZoomed = false;
-            }
-
-            function handleDoubleTap(e) {
-                if (!isZoomed) {
-                    isZoomed = true;
-                    const containerRect = zoomContainer.getBoundingClientRect();
-                    const touch = e.touches[0];
-                    const x = touch.clientX - containerRect.left;
-                    const y = touch.clientY - containerRect.top;
-
-                    const zoomX = (x / containerRect.width) * 100;
-                    const zoomY = (y / containerRect.height) * 100;
-
-                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(3)`;
-                } else {
-                    resetZoom();
-                }
-            }
-
+            // Detecta doble tap para zoom en móviles
             zoomContainer.addEventListener('touchstart', (e) => {
                 const currentTime = new Date().getTime();
                 const tapLength = currentTime - lastTapTime;
 
                 if (tapLength < 300 && tapLength > 0) {
-                    handleDoubleTap(e);
+                    e.preventDefault(); // Evita el comportamiento predeterminado del desplazamiento
+                    if (!isZoomed) {
+                        const touch = e.touches[0];
+                        const containerRect = zoomContainer.getBoundingClientRect();
+                        const x = touch.clientX - containerRect.left;
+                        const y = touch.clientY - containerRect.top;
+
+                        const zoomX = x / containerRect.width * 100;
+                        const zoomY = y / containerRect.height * 100;
+
+                        zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                        zoomImage.style.transform = `scale(3)`; // Zoom al 300%
+                        isZoomed = true;
+                        zoomCloseBtn.style.display = 'block'; // Muestra el botón de cerrar
+                    } else {
+                        zoomImage.style.transform = 'scale(1)';
+                        isZoomed = false;
+                        zoomCloseBtn.style.display = 'none'; // Oculta el botón de cerrar
+                    }
                 }
 
                 lastTapTime = currentTime;
-                
-                // For drag handling
-                if (isZoomed) {
-                    startX = e.touches[0].clientX;
-                    startY = e.touches[0].clientY;
-                    offsetX = parseFloat(zoomImage.style.transform.split('translate(')[1]?.split('px')[0] || 0);
-                    offsetY = parseFloat(zoomImage.style.transform.split('translate(')[1]?.split('px')[1] || 0);
-                }
             });
 
-            zoomContainer.addEventListener('touchmove', (e) => {
-                if (isZoomed) {
-                    const touch = e.touches[0];
-                    const moveX = touch.clientX - startX;
-                    const moveY = touch.clientY - startY;
-
-                    zoomImage.style.transform = `scale(3) translate(${offsetX + moveX}px, ${offsetY + moveY}px)`;
-                }
-            });
-
-            zoomContainer.addEventListener('touchend', () => {
-                if (isZoomed) {
-                    // Adjust translate values to fit within bounds if necessary
-                }
-            });
-
+            // Maneja el zoom en escritorio con el mouse
             zoomContainer.addEventListener('mousemove', (e) => {
                 if (!isZoomed) {
                     const containerRect = zoomContainer.getBoundingClientRect();
                     const x = e.clientX - containerRect.left;
                     const y = e.clientY - containerRect.top;
 
-                    const zoomX = (x / containerRect.width) * 100;
-                    const zoomY = (y / containerRect.height) * 100;
+                    const zoomX = x / containerRect.width * 100;
+                    const zoomY = y / containerRect.height * 100;
 
                     zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
-                    zoomImage.style.transform = `scale(2)`;
+                    zoomImage.style.transform = `scale(2)`; // Zoom al 200%
                 }
             });
 
-            zoomContainer.addEventListener('mouseleave', resetZoom);
+            // Restablece la imagen al estado original al salir del área de zoom en escritorio
+            zoomContainer.addEventListener('mouseleave', () => {
+                zoomImage.style.transform = 'scale(1)';
+            });
+
+            // Previene el zoom en móviles al deslizar
+            zoomContainer.addEventListener('touchmove', (e) => {
+                if (isZoomed) {
+                    e.preventDefault(); // Evita el desplazamiento de la página
+                }
+            });
+
+            // Maneja el clic en el botón de cerrar en móviles
+            zoomCloseBtn.addEventListener('click', () => {
+                zoomImage.style.transform = 'scale(1)';
+                isZoomed = false;
+                zoomCloseBtn.style.display = 'none'; // Oculta el botón de cerrar
+            });
         });
     </script>
 </body>
