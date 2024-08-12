@@ -9,6 +9,8 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            background: url('ruta/a/tu/imagen-de-fondo.jpg') no-repeat center center fixed;
+            background-size: cover; /* Asegura que la imagen cubra toda el área */
         }
 
         header {
@@ -16,7 +18,7 @@
             padding: 9px;
             background-color: #8e44ad;
             color: #fff;
-            border-bottom: 5px solid #f39c12;
+            border-bottom: 5px solid #da8908;
         }
 
         .container {
@@ -88,7 +90,7 @@
 </head>
 <body>
     <header>
-        <h1>Collar GG-1 zoomx3FAST</h1>
+        <h1>Collar GG-1 (FUNCIONA?)</h1>
     </header>
     <div class="container">
         <div class="collar-img" id="zoom-container">
@@ -108,13 +110,16 @@
             let isZoomed = false;
             let lastTapTime = 0;
             let startX, startY, initialX, initialY;
+            let touchStartTime = 0;
+            const DOUBLE_TAP_DELAY = 300; // Tiempo en milisegundos para considerar un doble toque
 
             // Detecta doble tap para zoom en móviles
             zoomContainer.addEventListener('touchstart', (e) => {
                 const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTapTime;
+                const tapLength = currentTime - touchStartTime;
 
-                if (tapLength < 300 && tapLength > 0) {
+                // Maneja el doble toque
+                if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) {
                     e.preventDefault(); // Evita el comportamiento predeterminado del desplazamiento
                     if (!isZoomed) {
                         const touch = e.touches[0];
@@ -136,7 +141,7 @@
                     }
                 }
 
-                lastTapTime = currentTime;
+                touchStartTime = currentTime;
             });
 
             // Maneja el movimiento dentro de la imagen cuando está ampliada en móviles
@@ -201,3 +206,4 @@
     </script>
 </body>
 </html>
+
