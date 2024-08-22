@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collar GG-141</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: rgba(24, 131, 104, 0.719);
+            height: 100vh;
+            font-family: "Poppins", sans-serif;
+        }
+
+        header {
+            text-align: center;
+            padding: 9px;
+            background-color: #8e44ad;
+            color: #fff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 350px; /* Ajusta el tamaño al contenedor */
+            height: auto;
+            background: rgb(255, 255, 255);
+            border-radius: 0.4em;
+            box-shadow: 0.3em 0.3em 0.7em #00000015;
+            transition: border 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: #dcdcdc 0.5em solid; /* Borde más grueso */
+            overflow: hidden;
+            cursor: grab;
+            position: relative; /* Necesario para el posicionamiento del botón de cierre */
+        }
+
+        .card:hover {
+            border: #dcdcdc 0.5em solid; /* Borde más grueso al hacer hover */
+        }
+
+        .card img {
+            width: 100%;
+            transition: transform 0.25s ease;
+            will-change: transform;
+        }
+
+        .zoom-close-btn {
+            display: none; /* Oculta el botón por defecto */
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+        .collar-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-regresar {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #8e44ad;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                max-width: 100%;
+            }
+
+            .collar-info {
+                margin-top: 15px;
+            }
+
+            .zoom-close-btn {
+                display: block; /* Muestra el botón en móviles cuando se activa el zoom */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Collar GG-141</h1>
+    </header>
+    <div class="container">
+        <div class="collar-img card" id="zoom-container">
+            <img src="imagenes/GG-141.jpg" alt="Collar GG-141" id="zoom-image">
+            <button class="zoom-close-btn" id="zoom-close-btn">✖</button>
+        </div>
+        <div class="collar-info">
+            <a href="index.html" class="btn-regresar">Volver al Catálogo</a>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const zoomContainer = document.getElementById('zoom-container');
+            const zoomImage = document.getElementById('zoom-image');
+            const zoomCloseBtn = document.getElementById('zoom-close-btn');
+            let isZoomed = false;
+            let touchStartTime = 0;
+            const DOUBLE_TAP_DELAY = 300; // Tiempo en milisegundos para considerar un doble toque
+
+            // Detecta doble tap para zoom en móviles
+            zoomContainer.addEventListener('touchend', (e) => {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - touchStartTime;
+
+                if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) {
+                    e.preventDefault(); // Evita el comportamiento predeterminado del desplazamiento
+                    if (!isZoomed) {
+                        const touch = e.changedTouches[0];
+                        const containerRect = zoomContainer.getBoundingClientRect();
+                        const x = touch.clientX - containerRect.left;
+                        const y = touch.clientY - containerRect.top;
+
+                        const zoomX = x / containerRect.width * 100;
+                        const zoomY = y / containerRect.height * 100;
+
+                        zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                        zoomImage.style.transform = `scale(3)`; // Zoom al 300%
+                        isZoomed = true;
+                        zoomCloseBtn.style.display = 'block'; // Muestra el botón de cerrar SOLO cuando hay zoom
+                    } else {
+                        zoomImage.style.transform = 'scale(1)';
+                        isZoomed = false;
+                        zoomCloseBtn.style.display = 'none'; // Oculta el botón de cerrar cuando el zoom se desactiva
+                    }
+                }
+
+                touchStartTime = currentTime;
+            });
+
+            // Maneja el movimiento dentro de la imagen cuando está ampliada en móviles
+            zoomContainer.addEventListener('touchmove', (e) => {
+                if (isZoomed) {
+                    e.preventDefault(); // Evita el desplazamiento de la página
+                    const touch = e.touches[0];
+                    const moveX = (touch.clientX - startX) * 2; // Aumenta la velocidad de desplazamiento en X
+                    const moveY = (touch.clientY - startY) * 2; // Aumenta la velocidad de desplazamiento en Y
+
+                    zoomImage.style.transform = `translate(${initialX + moveX}px, ${initialY + moveY}px) scale(3)`;
+                }
+            });
+
+            // Guarda la posición inicial del toque en móviles
+            zoomContainer.addEventListener('touchstart', (e) => {
+                const currentTime = new Date().getTime();
+                touchStartTime = currentTime;
+
+                if (isZoomed) {
+                    const touch = e.touches[0];
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+
+                    // Obtener la posición inicial de la imagen
+                    const transform = window.getComputedStyle(zoomImage).transform;
+                    if (transform !== 'none') {
+                        const matrix = transform.match(/^matrix\((.+)\)$/)[1].split(', ');
+                        initialX = parseFloat(matrix[4]);
+                        initialY = parseFloat(matrix[5]);
+                    } else {
+                        initialX = 0;
+                        initialY = 0;
+                    }
+                }
+            });
+
+            // Maneja el zoom en escritorio con el mouse
+            zoomContainer.addEventListener('mousemove', (e) => {
+                if (!isZoomed) {
+                    const containerRect = zoomContainer.getBoundingClientRect();
+                    const x = e.clientX - containerRect.left;
+                    const y = e.clientY - containerRect.top;
+
+                    const zoomX = x / containerRect.width * 100;
+                    const zoomY = y / containerRect.height * 100;
+
+                    zoomImage.style.transformOrigin = `${zoomX}% ${zoomY}%`;
+                    zoomImage.style.transform = `scale(2)`; // Zoom al 200%
+                }
+            });
+
+            // Restablece la imagen al estado original al salir del área de zoom en escritorio
+            zoomContainer.addEventListener('mouseleave', () => {
+                zoomImage.style.transform = 'scale(1)';
+            });
+
+            // Maneja el clic en el botón de cerrar en móviles
+            zoomCloseBtn.addEventListener('click', () => {
+                zoomImage.style.transform = 'scale(1)'; // Restaura la imagen al tamaño original
+                isZoomed = false; // Cambia el estado a zoom desactivado
+                zoomCloseBtn.style.display = 'none'; // Oculta el botón de cerrar
+            });
+        });
+    </script>
+</body>
+</html>
